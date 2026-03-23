@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Квант</string>
+
+    <!-- Chat Screen -->
+    <string name="chat_title">Квант</string>
+    <string name="sessions_nav">Сессии</string>
+    <string name="agent_mode">Режим агента</string>
+    <string name="welcome_title">Квант</string>
+    <string name="welcome_agent_subtitle">Режим агента: могу читать и редактировать файлы</string>
+    <string name="welcome_subtitle">Локальный ИИ-помощник — приватный и оффлайн</string>
+    <string name="welcome_agent_hint">Скажи, что сделать с твоим кодом!</string>
+    <string name="welcome_hint">Спроси что угодно — код, советы, обучение, идеи</string>
+    <string name="agent_thinking">Агент думает…</string>
+    <string name="thinking">Думаю…</string>
+    <string name="dismiss">Закрыть</string>
+
+    <!-- Input Bar -->
+    <string name="input_agent_placeholder">Задай вопрос агенту…</string>
+    <string name="input_placeholder">Введите сообщение…</string>
+    <string name="stop">Стоп</string>
+    <string name="send">Отправить</string>
+
+    <!-- Session Drawer -->
+    <string name="chats">Чаты</string>
+    <string name="new_chat">Новый чат</string>
+    <string name="archived_count">Архив (%d)</string>
+    <string name="archived_collapsed">Архив (%d) …</string>
+    <string name="delete_chat_title">Удалить чат?</string>
+    <string name="delete_chat_message">Чат и все его сообщения будут удалены безвозвратно.</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="archive">Архив</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="msgs_time_format">%1$d сообщ. • %2$s</string>
+    <string name="time_now">сейчас</string>
+    <string name="time_minutes">%dм</string>
+    <string name="time_hours">%dч</string>
+
+    <!-- Model Status -->
+    <string name="status_no_model">Нет модели</string>
+    <string name="status_loading">Загрузка…</string>
+    <string name="status_ready">Готов</string>
+    <string name="status_tok_s">%.1f ток/с</string>
+    <string name="status_generating">Генерация…</string>
+    <string name="status_error">Ошибка</string>
+
+    <!-- Tool Call / Agent Steps -->
+    <string name="status_waiting">Ожидание</string>
+    <string name="collapse">Свернуть</string>
+    <string name="expand">Развернуть</string>
+    <string name="write_file_header">Запись: %s</string>
+    <string name="reject">Отклонить</string>
+    <string name="apply">Применить</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Настройки</string>
+    <string name="section_model">Модель</string>
+    <string name="models_directory">Папка моделей</string>
+    <string name="not_available">Недоступно</string>
+    <string name="refresh">Обновить</string>
+    <string name="no_models_found">Файлы .gguf не найдены.\nПоместите модели в папку выше.</string>
+    <string name="available_models">Доступные модели (%d)</string>
+    <string name="section_inference">Инференс</string>
+    <string name="threads">Потоки</string>
+    <string name="context_size">Размер контекста</string>
+    <string name="section_agent_mode">Режим агента</string>
+    <string name="working_directory">Рабочая папка</string>
+    <string name="max_rounds">Макс. раундов</string>
+    <string name="section_about">О приложении</string>
+    <string name="app_version">Квант v%s</string>
+    <string name="app_description">Локальный ИИ-помощник для кода на базе llama.cpp. Полностью оффлайн, полностью приватно.</string>
+    <string name="licenses_title">Лицензии открытого ПО</string>
+    <string name="licenses_description">Квант использует следующие библиотеки с открытым исходным кодом:</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="terms_of_service">Условия использования</string>
+    <string name="section_compression">Сжатие диалога</string>
+    <string name="compression_toggle">Автосжатие старых сообщений</string>
+    <string name="compression_description">Автоматически сжимает старые сообщения при заполнении контекстного окна. Последние сообщения сохраняются полностью.</string>
+
+    <string name="section_language">Язык</string>
+    <string name="language_system">Системный</string>
+    <string name="language_en">English</string>
+    <string name="language_ru">Русский</string>
+
+    <!-- File Browser -->
+    <string name="files_title">Файлы</string>
+    <string name="up">Вверх</string>
+    <string name="permission_title">Требуется разрешение</string>
+    <string name="permission_message">Квант нужен доступ к файлам для просмотра и редактирования кода.</string>
+    <string name="grant_permission">Предоставить доступ</string>
+    <string name="empty_folder">Пустая папка</string>
+    <string name="git_repo">Git-репозиторий</string>
+    <string name="open_git">Открыть Git</string>
+    <string name="not_git_repo">Не Git-репозиторий</string>
+    <string name="init_git_repo">Создать Git-репозиторий</string>
+    <string name="size_mb">%.1f МБ</string>
+    <string name="size_kb">%.1f КБ</string>
+
+    <!-- File Browser Context Menu (v2.10.0) -->
+    <string name="fb_copy">Копировать</string>
+    <string name="fb_cut">Вырезать</string>
+    <string name="fb_paste">Вставить</string>
+    <string name="fb_rename">Переименовать</string>
+    <string name="fb_delete">Удалить</string>
+    <string name="fb_create_folder">Новая папка</string>
+    <string name="fb_file_info">Информация</string>
+    <string name="fb_delete_confirm">Удалить \"%s\"?</string>
+    <string name="fb_delete_folder_warn">Папка и всё её содержимое будут удалены.</string>
+    <string name="fb_rename_title">Переименовать</string>
+    <string name="fb_new_folder_title">Новая папка</string>
+    <string name="fb_folder_name_hint">Имя папки</string>
+    <string name="fb_new_name_hint">Новое имя</string>
+    <string name="fb_downloads">Загрузки</string>
+    <string name="fb_home">Домой</string>
+    <string name="fb_copied">Скопировано: %s</string>
+    <string name="fb_cut_ready">Готово к перемещению: %s</string>
+    <string name="fb_pasted">Вставлено</string>
+    <string name="fb_renamed">Переименовано в %s</string>
+    <string name="fb_folder_created">Папка создана</string>
+    <string name="fb_error_exists">Файл уже существует</string>
+    <string name="fb_size_info">Размер: %s</string>
+    <string name="fb_modified_info">Изменён: %s</string>
+    <string name="fb_path_info">Путь: %s</string>
+    <string name="fb_confirm">Подтвердить</string>
+    <string name="fb_cancel">Отмена</string>
+
+    <!-- Editor Screen -->
+    <string name="back">Назад</string>
+    <string name="undo">Отменить</string>
+    <string name="redo">Вернуть</string>
+    <string name="save">Сохранить</string>
+    <string name="editor_position">Стр %1$d, Кол %2$d</string>
+
+    <!-- Git Screen -->
+    <string name="tab_status">Статус</string>
+    <string name="tab_log">Лог (%d)</string>
+    <string name="clean_tree">Рабочее дерево чисто</string>
+    <string name="staged_changes">Подготовлено (%d)</string>
+    <string name="unstaged_changes">Изменения (%d)</string>
+    <string name="stage_all">Подготовить все</string>
+    <string name="conflicts">Конфликты (%d)</string>
+    <string name="commit">Коммит</string>
+    <string name="commit_message_label">Сообщение коммита</string>
+    <string name="commit_message_placeholder">Опишите изменения…</string>
+    <string name="commit_files">Коммит (%1$d файл%2$s)</string>
+    <string name="no_commits">Коммитов пока нет</string>
+    <string name="time_just_now">только что</string>
+    <string name="time_m_ago">%dм назад</string>
+    <string name="time_h_ago">%dч назад</string>
+    <string name="time_d_ago">%dд назад</string>
+
+    <!-- ViewModel Messages -->
+    <string name="error_max_sessions">Максимум %d активных чатов. Сначала архивируйте или удалите чат.</string>
+    <string name="error_model_not_found">Файл модели не найден: %s</string>
+    <string name="error_model_unreadable">Не удаётся прочитать файл модели: %s</string>
+    <string name="error_model_not_loaded">Модель не загружена. Перейдите в Настройки и выберите .gguf файл.\n\nПоместите модель в:\n/Android/data/com.quantma.lite/files/models/</string>
+    <string name="error_oom_load">Нехватка памяти при загрузке. Попробуйте модель поменьше или уменьшите размер контекста.</string>
+    <string name="error_invalid_model">Невалидный файл модели. Убедитесь, что это GGUF файл.</string>
+    <string name="error_load_failed">Ошибка загрузки модели: %s</string>
+    <string name="error_oom_generate">Нехватка памяти при генерации. Попробуйте уменьшить размер контекста.</string>
+    <string name="error_model_unloaded">Модель выгружена. Перезагрузите в Настройках.</string>
+    <string name="error_generation">Ошибка генерации: %s</string>
+    <string name="error_agent">Ошибка агента: %s</string>
+    <string name="empty_response">(пустой ответ)</string>
+    <string name="generation_stopped">\n\n_(генерация остановлена)_</string>
+    <string name="agent_stopped">\n\n_(агент остановлен)_</string>
+    <string name="empty_agent_response">(пустой ответ агента)</string>
+    <string name="file_written">Файл записан: %s</string>
+    <string name="write_rejected">Пользователь отклонил изменение файла.</string>
+
+    <!-- Sampling Settings (Phase 1 v1.0.0) -->
+    <string name="section_sampling">Семплирование</string>
+    <string name="sampling_temperature">Температура</string>
+    <string name="sampling_temperature_hint">Выше = больше вариативности, ниже = точнее</string>
+    <string name="sampling_top_p">Top-P</string>
+    <string name="sampling_repeat_penalty">Штраф за повторы</string>
+
+    <!-- Chat Search -->
+    <string name="search_open">Поиск</string>
+    <string name="search_close">Закрыть поиск</string>
+    <string name="search_placeholder">Поиск по сообщениям…</string>
+
+    <!-- Message Actions -->
+    <string name="copy_message">Копировать</string>
+    <string name="copy_code">Копировать код</string>
+
+    <!-- Agent Configuration (Phase 2 v1.1.0) -->
+    <string name="section_agent_config">Настройка агента</string>
+    <string name="agent_config_title">Конфиг агента</string>
+    <string name="agent_config_subtitle">Настройка системного промпта и поведения ИИ</string>
+    <string name="agent_config_presets">Пресеты</string>
+    <string name="agent_config_saved">Сохранённые конфиги</string>
+    <string name="agent_config_new">Новый</string>
+    <string name="agent_config_name">Название</string>
+    <string name="agent_config_system_prompt">Системный промпт</string>
+    <string name="agent_config_set_active">Сделать активным</string>
+    <string name="agent_config_active">Активный</string>
+    <string name="agent_config_empty">Нет конфигов. Нажмите на пресет, чтобы добавить.</string>
+    <string name="agent_config_save">Сохранить</string>
+    <string name="agent_config_add_preset">Нажмите, чтобы добавить</string>
+
+    <!-- Git Screen Phase 3 (v1.2.0) -->
+    <string name="tab_branches">Ветки</string>
+    <string name="tab_diff">Diff</string>
+    <string name="create_branch">Новая ветка</string>
+    <string name="branch_name_hint">Имя ветки</string>
+    <string name="checkout_branch">Переключиться</string>
+    <string name="delete_branch">Удалить</string>
+    <string name="merge_branch">Влить в текущую</string>
+    <string name="current_branch_label">текущая</string>
+    <string name="merge_success">Влито: %s</string>
+    <string name="merge_conflict">Конфликты: %s</string>
+    <string name="stash_changes">Stash</string>
+    <string name="stash_pop">Применить stash</string>
+    <string name="no_stashes">Нет stash-записей</string>
+    <string name="no_diff">Изменений нет</string>
+    <string name="no_branches">Нет веток</string>
+
+    <!-- Git Remote Phase 4 (v1.3.0) -->
+    <string name="clone_repo">Клонировать репозиторий</string>
+    <string name="clone_url_hint">URL репозитория</string>
+    <string name="clone_dest_hint">Папка назначения</string>
+    <string name="clone_start">Клонировать</string>
+    <string name="cloning">Клонирование…</string>
+    <string name="pull">Pull</string>
+    <string name="push">Push</string>
+    <string name="fetch">Fetch</string>
+    <string name="pull_success">Pulled: %s</string>
+    <string name="push_success">Push выполнен</string>
+    <string name="fetch_success">Fetch выполнен</string>
+    <string name="remotes">Удалённые</string>
+    <string name="add_remote">Добавить remote</string>
+    <string name="remote_name_hint">Имя (напр. origin)</string>
+    <string name="remote_url_hint">URL</string>
+    <string name="no_remotes">Нет remote-репозиториев</string>
+    <string name="section_git">Git</string>
+    <string name="git_author_name">Имя автора</string>
+    <string name="git_author_email">Email автора</string>
+    <string name="git_token">Токен доступа (PAT)</string>
+    <string name="git_token_hint">Токен GitHub/GitLab для push/pull</string>
+
+    <!-- Skills, Rules, Hooks Phase 5 (v1.4.0) -->
+    <string name="section_skills_rules_hooks">Скилы, правила и хуки</string>
+    <string name="srh_title">Скилы, правила и хуки</string>
+    <string name="srh_subtitle">Настройка скилов агента, правил кода и автоматизации</string>
+    <string name="tab_skills">Скилы</string>
+    <string name="tab_rules">Правила</string>
+    <string name="tab_hooks">Хуки</string>
+    <string name="skills_empty">Нет настроенных скилов.</string>
+    <string name="rules_empty">Нет настроенных правил.</string>
+    <string name="hooks_empty">Нет настроенных хуков.</string>
+    <string name="built_in">Встроенный</string>
+    <string name="custom">Пользовательский</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Выключено</string>
+    <string name="add_skill">Добавить скил</string>
+    <string name="add_rule">Добавить правило</string>
+    <string name="add_hook">Добавить хук</string>
+    <string name="skill_name">Название скила</string>
+    <string name="skill_description">Описание</string>
+    <string name="skill_triggers">Триггеры</string>
+    <string name="skill_triggers_hint">Ключевые слова через запятую (напр. refactor,рефакторинг)</string>
+    <string name="skill_prompt">Инструкции промпта</string>
+    <string name="rule_category">Категория</string>
+    <string name="rule_instruction">Инструкция</string>
+    <string name="rule_instruction_hint">Правило, которому агент должен следовать…</string>
+    <string name="hook_trigger">Событие-триггер</string>
+    <string name="hook_action">Действие</string>
+    <string name="hook_action_hint">Что агент должен сделать…</string>
+    <string name="category_code_style">Стиль кода</string>
+    <string name="category_architecture">Архитектура</string>
+    <string name="category_security">Безопасность</string>
+    <string name="category_comments">Комментарии</string>
+    <string name="trigger_pre_commit">Перед коммитом</string>
+    <string name="trigger_post_commit">После коммита</string>
+    <string name="trigger_on_file_change">При изменении файла</string>
+    <string name="trigger_on_error">При ошибке</string>
+
+    <!-- Git UX Fix + Diff Viewer Phase 6 (v1.5.0) -->
+    <string name="git_save_credentials">Сохранить данные</string>
+    <string name="git_credentials_saved">Данные Git сохранены ✓</string>
+    <string name="diff_view">Diff</string>
+    <string name="full_view">Весь файл</string>
+    <string name="new_file_label">Новый файл</string>
+
+    <!-- GPU Acceleration Phase 7 (v1.6.0) -->
+    <string name="section_gpu">GPU-ускорение</string>
+    <string name="gpu_use_vulkan">Использовать Vulkan GPU</string>
+    <string name="gpu_vulkan_hint">Выгружает слои модели на GPU через Vulkan. Требует устройство с поддержкой Vulkan.</string>
+    <string name="gpu_layers">Слоёв GPU</string>
+    <string name="gpu_layers_auto">Слоёв GPU: Авто</string>
+    <string name="gpu_layers_hint">Количество слоёв модели для выгрузки (0 = авто/все)</string>
+
+    <!-- Git Credentials Biometric Screen Phase 8 (v1.7.0) -->
+    <string name="open_git_credentials">Учётные данные Git</string>
+    <string name="git_credentials_title">Данные Git</string>
+    <string name="git_credentials_subtitle">Защищено отпечатком или PIN-кодом</string>
+    <string name="biometric_prompt_title">Подтвердите личность</string>
+    <string name="biometric_prompt_subtitle">Пройдите аутентификацию для доступа к данным Git</string>
+    <string name="authentication_failed">Аутентификация не удалась. Попробуйте ещё раз.</string>
+    <string name="retry">Повторить</string>
+    <string name="credentials_saved">Данные сохранены ✓</string>
+
+    <!-- Extended Agent Toolkit Phase 9 (v1.8.0) -->
+    <string name="tool_run_command">Команда</string>
+    <string name="tool_search_files">Поиск по файлам</string>
+    <string name="tool_delete_file">Удалить файл</string>
+    <string name="delete_file_header">Удалить: %s</string>
+    <string name="delete_file_warning">⚠ Это действие нельзя отменить!</string>
+    <string name="delete_file_preview">Содержимое файла:</string>
+    <string name="delete_confirm">Удалить</string>
+    <string name="file_deleted">Файл удалён: %s</string>
+    <string name="delete_rejected">Пользователь отменил удаление.</string>
+    <string name="command_not_allowed">Команда не разрешена.</string>
+    <string name="search_no_results">Совпадений не найдено.</string>
+
+    <!-- Model Downloader (Phase 10 v1.9.0) -->
+    <string name="download_model">Скачать модель</string>
+    <string name="download_model_title">Скачать модель</string>
+    <string name="download_url_label">Ссылка для скачивания</string>
+    <string name="download_url_hint">https://huggingface.co/.../model.gguf</string>
+    <string name="download_url_example">Вставьте прямую ссылку на файл (.gguf). Работает с HuggingFace и другими прямыми ссылками.</string>
+    <string name="download_start">Скачать</string>
+    <string name="download_progress_label">Загрузка %s…</string>
+    <string name="download_progress_bytes">%d%% · %.1f МБ / %.1f МБ</string>
+    <string name="download_done">Загружено: %s ✓</string>
+    <string name="download_error">⚠ Ошибка: %s</string>
+
+    <!-- Onboarding (Phase 9 v1.9.1) -->
+    <string name="onboarding_welcome_title">Добро пожаловать в Квант</string>
+    <string name="onboarding_welcome_body">Локальный ИИ-помощник для кода прямо на вашем устройстве. Интернет не нужен.</string>
+    <string name="onboarding_model_title">Добавьте языковую модель</string>
+    <string name="onboarding_model_body">Скопируйте .gguf файл в папку models/ или скачайте модель из каталога ниже.</string>
+    <string name="onboarding_ready_title">Всё готово!</string>
+    <string name="onboarding_ready_body">Откройте чат и начните общаться с ИИ. Всё работает локально.</string>
+    <string name="onboarding_next">Далее →</string>
+    <string name="onboarding_start">Начать</string>
+
+    <!-- Model Catalog (Phase 9 v1.9.1 → v2.0) -->
+    <string name="model_catalog">Каталог моделей</string>
+    <string name="catalog_download">Скачать</string>
+    <string name="catalog_downloading">Загрузка…</string>
+    <string name="catalog_done">✓ Готово</string>
+    <string name="catalog_error">Ошибка</string>
+    <string name="catalog_cancel">Отмена</string>
+    <string name="catalog_specs">Характеристики</string>
+    <string name="catalog_spec_params">Параметры</string>
+    <string name="catalog_spec_quant">Квантизация</string>
+    <string name="catalog_spec_size">Размер загрузки</string>
+    <string name="catalog_spec_ram">Требуется RAM</string>
+    <string name="catalog_capabilities">Возможности</string>
+    <string name="catalog_vision_note">Файл зрения будет загружен отдельно</string>
+    <string name="catalog_cat_compact">Компактные модели</string>
+    <string name="catalog_cat_coding">Модели для кода</string>
+    <string name="catalog_cat_general">Универсальные</string>
+    <string name="catalog_cat_multimodal">Мультимодальные (Зрение + Текст)</string>
+    <string name="catalog_chip_compact">Компактные</string>
+    <string name="catalog_chip_coding">Код</string>
+    <string name="catalog_chip_general">Универсальные</string>
+    <string name="catalog_chip_multimodal">Зрение</string>
+
+    <!-- LoRA Adapter (Phase 10 v1.9.0) -->
+    <string name="section_lora">LoRA-адаптер</string>
+    <string name="lora_use_adapter">Использовать LoRA-адаптер</string>
+    <string name="lora_hint">Загружает LoRA fine-tune адаптер (.gguf) поверх базовой модели. Требует перезагрузку модели.</string>
+    <string name="lora_path">LoRA-файл</string>
+    <string name="lora_path_hint">Выберите .gguf адаптер</string>
+    <string name="lora_scale">Масштаб</string>
+    <string name="lora_scale_hint">Вес адаптера: 1.0 = полная сила, 0.0 = отключён</string>
+
+    <!-- Settings UX (v1.9.2) -->
+    <string name="hint_threads">Потоков CPU для инференса. Больше = быстрее при многоядерном CPU, но может перегреться.</string>
+    <string name="hint_context_size">Макс. токенов в памяти за раз. Больше = длиннее диалог, но требует больше RAM.</string>
+    <string name="hint_top_p">Ядерная выборка: меньше = точнее; 1.0 = без фильтрации.</string>
+    <string name="hint_repeat_penalty">Штраф за повторы. 1.0 = нет; 1.3 = умеренно; слишком высокое ухудшает связность.</string>
+
+    <!-- Auto-config hints -->
+    <string name="hint_auto_threads">Авто: задействует производительные ядра минус 1 для UI-потока.</string>
+    <string name="hint_auto_context_size">Авто: подбирается по свободной RAM и размеру модели.</string>
+    <string name="hint_auto_batch_size">Авто: больше батч = быстрее обработка промпта, масштабируется по RAM.</string>
+    <string name="hint_auto_flash_attention">Авто: включается при контексте ≥ 2048 токенов для ускорения attention.</string>
+    <string name="hint_auto_mlock">Авто: фиксирует модель в RAM, если памяти достаточно, чтобы избежать подвисаний.</string>
+    <string name="hint_auto_gpu_layers">Авто: оптимальное количество слоёв на GPU по бэкенду и размеру модели.</string>
+    <string name="hint_auto_sampling">Авто: сбалансированные значения для общего использования.</string>
+
+    <!-- New inference params -->
+    <string name="batch_size">Размер батча</string>
+    <string name="hint_batch_size">Токенов за раз при обработке промпта. Больше = быстрее промпт, но больше RAM.</string>
+    <string name="flash_attention">Flash Attention</string>
+    <string name="hint_flash_attention">Ускоряет вычисление внимания, особенно на длинных контекстах. Безопасно на ARM64.</string>
+    <string name="mlock">Зафиксировать в RAM</string>
+    <string name="hint_mlock">Не даёт Android выгружать веса модели на диск. Больше RAM, но без подлагиваний.</string>
+
+    <!-- Extended sampling params -->
+    <string name="sampling_top_k">Top-K</string>
+    <string name="hint_top_k">Ограничивает выборку K самыми вероятными токенами. 0 = выкл; 40 = баланс.</string>
+    <string name="sampling_min_p">Min-P</string>
+    <string name="hint_min_p">Отсекает токены с вероятностью ниже min_p × max_prob. Современная альтернатива Top-K.</string>
+    <string name="sampling_penalty_last_n">Окно штрафа</string>
+    <string name="hint_penalty_last_n">Сколько последних токенов проверять на повторы. 0 = выкл; 64 = стандарт.</string>
+    <string name="hint_max_rounds">Макс. шагов агента за запрос. Предотвращает бесконечные циклы.</string>
+    <string name="pick_folder">Выбрать папку</string>
+    <string name="clone_from_git">Клонировать Git</string>
+    <string name="working_dir_hint">Агент работает только с файлами в этой папке</string>
+    <string name="done">Готово</string>
+
+    <!-- Settings Mode (v2.7.0) -->
+    <string name="settings_mode_label">Режим настроек</string>
+    <string name="settings_mode_simple">Простой — только основные</string>
+    <string name="settings_mode_advanced">Расширенный — все настройки</string>
+    <string name="color_presets">Пресеты</string>
+
+    <!-- RAG / Knowledge Base (Phase 11 v2.0.0) -->
+    <string name="section_rag">База знаний</string>
+    <string name="rag_enable">Включить RAG-индекс</string>
+    <string name="rag_hint">Индексирует кодовую базу, чтобы агент мог искать по содержимому через инструмент rag_search</string>
+    <string name="rag_index_path">Путь для индексации</string>
+    <string name="rag_reindex">Переиндексировать</string>
+    <string name="rag_indexing">Индексация…</string>
+    <string name="rag_not_indexed">Ещё не проиндексировано. Нажмите Переиндексировать.</string>
+</resources>

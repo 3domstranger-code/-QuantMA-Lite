@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Terminal cursor / code bracket symbol -->
+    <!-- Safe zone is 66dp centered (from 21 to 87) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,44 L44,36 L46.8,38.8 L41.6,44 L46.8,49.2 L44,52 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M72,44 L64,36 L61.2,38.8 L66.4,44 L61.2,49.2 L64,52 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M49,54 L56,34 L59,35 L52,55 Z" />
+    <!-- Underscore cursor -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:alpha="0.8"
+        android:pathData="M42,60 L66,60 L66,63 L42,63 Z" />
+    <!-- Blinking cursor line -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,66 L52,66 L52,69 L42,69 Z" />
+</vector>

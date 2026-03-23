@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QuantMA Lite</string>
+
+    <!-- Chat Screen -->
+    <string name="chat_title">Квант</string>
+    <string name="sessions_nav">Sessions</string>
+    <string name="agent_mode">Agent Mode</string>
+    <string name="welcome_title">Квант</string>
+    <string name="welcome_agent_subtitle">Agent mode: I can read &amp; edit your files</string>
+    <string name="welcome_subtitle">Your local AI assistant — private &amp; offline</string>
+    <string name="welcome_agent_hint">Tell me what to do with your code!</string>
+    <string name="welcome_hint">Ask me anything — code, advice, learning, ideas</string>
+    <string name="agent_thinking">Agent thinking…</string>
+    <string name="thinking">Thinking…</string>
+    <string name="dismiss">Dismiss</string>
+
+    <!-- Input Bar -->
+    <string name="input_agent_placeholder">Ask the agent…</string>
+    <string name="input_placeholder">Type a message…</string>
+    <string name="stop">Stop</string>
+    <string name="send">Send</string>
+
+    <!-- Session Drawer -->
+    <string name="chats">Chats</string>
+    <string name="new_chat">New Chat</string>
+    <string name="archived_count">Archived (%d)</string>
+    <string name="archived_collapsed">Archived (%d) …</string>
+    <string name="delete_chat_title">Delete chat?</string>
+    <string name="delete_chat_message">This will permanently delete this chat and all its messages.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="archive">Archive</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="msgs_time_format">%1$d msgs • %2$s</string>
+    <string name="time_now">now</string>
+    <string name="time_minutes">%dm</string>
+    <string name="time_hours">%dh</string>
+
+    <!-- Model Status -->
+    <string name="status_no_model">No model</string>
+    <string name="status_loading">Loading…</string>
+    <string name="status_ready">Ready</string>
+    <string name="status_tok_s">%.1f tok/s</string>
+    <string name="status_generating">Generating…</string>
+    <string name="status_error">Error</string>
+
+    <!-- Tool Call / Agent Steps -->
+    <string name="status_waiting">Waiting</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="write_file_header">Write: %s</string>
+    <string name="reject">Reject</string>
+    <string name="apply">Apply</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="section_model">Model</string>
+    <string name="models_directory">Models Directory</string>
+    <string name="not_available">Not available</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_models_found">No .gguf files found.\nPlace model files in the directory above.</string>
+    <string name="available_models">Available Models (%d)</string>
+    <string name="section_inference">Inference</string>
+    <string name="threads">Threads</string>
+    <string name="context_size">Context Size</string>
+    <string name="section_compression">Dialog Compression</string>
+    <string name="compression_toggle">Auto-compress old messages</string>
+    <string name="compression_description">Automatically summarize older messages when the context window is nearly full. Keeps recent messages intact.</string>
+    <string name="section_agent_mode">Agent Mode</string>
+    <string name="working_directory">Working Directory</string>
+    <string name="max_rounds">Max Rounds</string>
+    <string name="section_about">About</string>
+    <string name="app_version">QuantMA Lite v%s</string>
+    <string name="app_description">Local AI coding assistant powered by llama.cpp. Fully offline, fully private.</string>
+    <string name="licenses_title">Open Source Licenses</string>
+    <string name="licenses_description">QuantMA Lite uses the following open source libraries:</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="section_language">Language</string>
+    <string name="language_system">System default</string>
+    <string name="language_en">English</string>
+    <string name="language_ru">Русский</string>
+
+    <!-- File Browser -->
+    <string name="files_title">Files</string>
+    <string name="up">Up</string>
+    <string name="permission_title">Storage Permission Required</string>
+    <string name="permission_message">QuantMA Lite needs access to your files to browse and edit code.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="empty_folder">Empty folder</string>
+    <string name="git_repo">Git repo</string>
+    <string name="open_git">Open Git</string>
+    <string name="not_git_repo">Not a Git repository</string>
+    <string name="init_git_repo">Init Git Repo</string>
+    <string name="size_mb">%.1f MB</string>
+    <string name="size_kb">%.1f KB</string>
+
+    <!-- File Browser Context Menu (v2.10.0) -->
+    <string name="fb_copy">Copy</string>
+    <string name="fb_cut">Cut</string>
+    <string name="fb_paste">Paste</string>
+    <string name="fb_rename">Rename</string>
+    <string name="fb_delete">Delete</string>
+    <string name="fb_create_folder">New Folder</string>
+    <string name="fb_file_info">Info</string>
+    <string name="fb_delete_confirm">Delete \"%s\"?</string>
+    <string name="fb_delete_folder_warn">This will delete the folder and all its contents.</string>
+    <string name="fb_rename_title">Rename</string>
+    <string name="fb_new_folder_title">New Folder</string>
+    <string name="fb_folder_name_hint">Folder name</string>
+    <string name="fb_new_name_hint">New name</string>
+    <string name="fb_downloads">Downloads</string>
+    <string name="fb_home">Home</string>
+    <string name="fb_copied">Copied: %s</string>
+    <string name="fb_cut_ready">Ready to move: %s</string>
+    <string name="fb_pasted">Pasted successfully</string>
+    <string name="fb_renamed">Renamed to %s</string>
+    <string name="fb_folder_created">Folder created</string>
+    <string name="fb_error_exists">File already exists</string>
+    <string name="fb_size_info">Size: %s</string>
+    <string name="fb_modified_info">Modified: %s</string>
+    <string name="fb_path_info">Path: %s</string>
+    <string name="fb_confirm">Confirm</string>
+    <string name="fb_cancel">Cancel</string>
+
+    <!-- Editor Screen -->
+    <string name="back">Back</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="save">Save</string>
+    <string name="editor_position">Ln %1$d, Col %2$d</string>
+
+    <!-- Git Screen -->
+    <string name="tab_status">Status</string>
+    <string name="tab_log">Log (%d)</string>
+    <string name="clean_tree">Working tree is clean</string>
+    <string name="staged_changes">Staged Changes (%d)</string>
+    <string name="unstaged_changes">Changes (%d)</string>
+    <string name="stage_all">Stage All</string>
+    <string name="conflicts">Conflicts (%d)</string>
+    <string name="commit">Commit</string>
+    <string name="commit_message_label">Commit message</string>
+    <string name="commit_message_placeholder">Describe your changes…</string>
+    <string name="commit_files">Commit (%1$d file%2$s)</string>
+    <string name="no_commits">No commits yet</string>
+    <string name="time_just_now">just now</string>
+    <string name="time_m_ago">%dm ago</string>
+    <string name="time_h_ago">%dh ago</string>
+    <string name="time_d_ago">%dd ago</string>
+
+    <!-- ViewModel Messages -->
+    <string name="error_max_sessions">Max %d active chats. Archive or delete a chat first.</string>
+    <string name="error_model_not_found">Model file not found: %s</string>
+    <string name="error_model_unreadable">Cannot read model file: %s</string>
+    <string name="error_model_not_loaded">Model not loaded. Go to Settings and select a .gguf model file.\n\nPlace your model in:\n/Android/data/com.quantma.lite/files/models/</string>
+    <string name="error_oom_load">Out of memory loading model. Try a smaller model or reduce context size.</string>
+    <string name="error_invalid_model">Invalid model file. Make sure it\'s a valid GGUF file.</string>
+    <string name="error_load_failed">Failed to load model: %s</string>
+    <string name="error_oom_generate">Out of memory during generation. Try reducing context size.</string>
+    <string name="error_model_unloaded">Model was unloaded. Please reload in Settings.</string>
+    <string name="error_generation">Generation error: %s</string>
+    <string name="error_agent">Agent error: %s</string>
+    <string name="empty_response">(empty response)</string>
+    <string name="generation_stopped">\n\n_(generation stopped)_</string>
+    <string name="agent_stopped">\n\n_(agent stopped)_</string>
+    <string name="empty_agent_response">(empty agent response)</string>
+    <string name="file_written">File written successfully: %s</string>
+    <string name="write_rejected">User rejected the file change.</string>
+
+    <!-- Sampling Settings (Phase 1 v1.0.0) -->
+    <string name="section_sampling">Sampling</string>
+    <string name="sampling_temperature">Temperature</string>
+    <string name="sampling_temperature_hint">Higher = more creative, lower = more focused</string>
+    <string name="sampling_top_p">Top-P</string>
+    <string name="sampling_repeat_penalty">Repeat Penalty</string>
+
+    <!-- Chat Search -->
+    <string name="search_open">Search</string>
+    <string name="search_close">Close Search</string>
+    <string name="search_placeholder">Search messages…</string>
+
+    <!-- Message Actions -->
+    <string name="copy_message">Copy</string>
+    <string name="copy_code">Copy code</string>
+
+    <!-- Agent Configuration (Phase 2 v1.1.0) -->
+    <string name="section_agent_config">Agent Configuration</string>
+    <string name="agent_config_title">Agent Config</string>
+    <string name="agent_config_subtitle">Customize AI system prompt and behavior</string>
+    <string name="agent_config_presets">Presets</string>
+    <string name="agent_config_saved">Saved Configs</string>
+    <string name="agent_config_new">New</string>
+    <string name="agent_config_name">Name</string>
+    <string name="agent_config_system_prompt">System Prompt</string>
+    <string name="agent_config_set_active">Set Active</string>
+    <string name="agent_config_active">Active</string>
+    <string name="agent_config_empty">No configs yet. Tap a preset to add one.</string>
+    <string name="agent_config_save">Save</string>
+    <string name="agent_config_add_preset">Tap to add</string>
+
+    <!-- Git Screen Phase 3 (v1.2.0) -->
+    <string name="tab_branches">Branches</string>
+    <string name="tab_diff">Diff</string>
+    <string name="create_branch">New Branch</string>
+    <string name="branch_name_hint">Branch name</string>
+    <string name="checkout_branch">Checkout</string>
+    <string name="delete_branch">Delete</string>
+    <string name="merge_branch">Merge into current</string>
+    <string name="current_branch_label">current</string>
+    <string name="merge_success">Merged: %s</string>
+    <string name="merge_conflict">Conflicts: %s</string>
+    <string name="stash_changes">Stash</string>
+    <string name="stash_pop">Pop Stash</string>
+    <string name="no_stashes">No stashes</string>
+    <string name="no_diff">No changes to show</string>
+    <string name="no_branches">No branches</string>
+
+    <!-- Git Remote Phase 4 (v1.3.0) -->
+    <string name="clone_repo">Clone Repository</string>
+    <string name="clone_url_hint">Repository URL</string>
+    <string name="clone_dest_hint">Destination folder</string>
+    <string name="clone_start">Clone</string>
+    <string name="cloning">Cloning…</string>
+    <string name="pull">Pull</string>
+    <string name="push">Push</string>
+    <string name="fetch">Fetch</string>
+    <string name="pull_success">Pulled: %s</string>
+    <string name="push_success">Pushed successfully</string>
+    <string name="fetch_success">Fetched successfully</string>
+    <string name="remotes">Remotes</string>
+    <string name="add_remote">Add Remote</string>
+    <string name="remote_name_hint">Name (e.g. origin)</string>
+    <string name="remote_url_hint">URL</string>
+    <string name="no_remotes">No remotes configured</string>
+    <string name="section_git">Git</string>
+    <string name="git_author_name">Author Name</string>
+    <string name="git_author_email">Author Email</string>
+    <string name="git_token">Personal Access Token</string>
+    <string name="git_token_hint">GitHub/GitLab token for push/pull</string>
+
+    <!-- Skills, Rules, Hooks Phase 5 (v1.4.0) -->
+    <string name="section_skills_rules_hooks">Skills, Rules &amp; Hooks</string>
+    <string name="srh_title">Skills, Rules &amp; Hooks</string>
+    <string name="srh_subtitle">Customize agent skills, code rules, and automation hooks</string>
+    <string name="tab_skills">Skills</string>
+    <string name="tab_rules">Rules</string>
+    <string name="tab_hooks">Hooks</string>
+    <string name="skills_empty">No skills configured.</string>
+    <string name="rules_empty">No rules configured.</string>
+    <string name="hooks_empty">No hooks configured.</string>
+    <string name="built_in">Built-in</string>
+    <string name="custom">Custom</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="add_skill">Add Skill</string>
+    <string name="add_rule">Add Rule</string>
+    <string name="add_hook">Add Hook</string>
+    <string name="skill_name">Skill Name</string>
+    <string name="skill_description">Description</string>
+    <string name="skill_triggers">Trigger Patterns</string>
+    <string name="skill_triggers_hint">Comma-separated keywords (e.g. refactor,clean up)</string>
+    <string name="skill_prompt">Prompt Instructions</string>
+    <string name="rule_category">Category</string>
+    <string name="rule_instruction">Instruction</string>
+    <string name="rule_instruction_hint">Rule the agent must follow…</string>
+    <string name="hook_trigger">Trigger Event</string>
+    <string name="hook_action">Action</string>
+    <string name="hook_action_hint">What the agent should do…</string>
+    <string name="category_code_style">Code Style</string>
+    <string name="category_architecture">Architecture</string>
+    <string name="category_security">Security</string>
+    <string name="category_comments">Comments</string>
+    <string name="trigger_pre_commit">Before Commit</string>
+    <string name="trigger_post_commit">After Commit</string>
+    <string name="trigger_on_file_change">On File Change</string>
+    <string name="trigger_on_error">On Error</string>
+
+    <!-- Git UX Fix + Diff Viewer Phase 6 (v1.5.0) -->
+    <string name="git_save_credentials">Save Credentials</string>
+    <string name="git_credentials_saved">Git credentials saved ✓</string>
+    <string name="diff_view">Diff</string>
+    <string name="full_view">Full</string>
+    <string name="new_file_label">New file</string>
+
+    <!-- GPU Acceleration Phase 7 (v1.6.0) -->
+    <string name="section_gpu">GPU Acceleration</string>
+    <string name="gpu_use_vulkan">Use Vulkan GPU</string>
+    <string name="gpu_vulkan_hint">Offloads transformer layers to GPU via Vulkan. Requires Vulkan-capable device.</string>
+    <string name="gpu_layers">GPU Layers</string>
+    <string name="gpu_layers_auto">GPU Layers: Auto</string>
+    <string name="gpu_layers_hint">Number of model layers to offload (0 = auto/all)</string>
+
+    <!-- Git Credentials Biometric Screen Phase 8 (v1.7.0) -->
+    <string name="open_git_credentials">Git Credentials</string>
+    <string name="git_credentials_title">Git Credentials</string>
+    <string name="git_credentials_subtitle">Protected by fingerprint or PIN</string>
+    <string name="biometric_prompt_title">Verify Identity</string>
+    <string name="biometric_prompt_subtitle">Authenticate to access Git credentials</string>
+    <string name="authentication_failed">Authentication failed. Try again.</string>
+    <string name="retry">Retry</string>
+    <string name="credentials_saved">Credentials saved ✓</string>
+
+    <!-- Extended Agent Toolkit Phase 9 (v1.8.0) -->
+    <string name="tool_run_command">Run Command</string>
+    <string name="tool_search_files">Search Files</string>
+    <string name="tool_delete_file">Delete File</string>
+    <string name="delete_file_header">Delete: %s</string>
+    <string name="delete_file_warning">⚠ This action cannot be undone!</string>
+    <string name="delete_file_preview">File preview:</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="file_deleted">File deleted: %s</string>
+    <string name="delete_rejected">Deletion rejected by user.</string>
+    <string name="command_not_allowed">Command not in whitelist.</string>
+    <string name="search_no_results">No matches found.</string>
+
+    <!-- Model Downloader (Phase 10 v1.9.0) -->
+    <string name="download_model">Download Model</string>
+    <string name="download_model_title">Download Model</string>
+    <string name="download_url_label">Download URL</string>
+    <string name="download_url_hint">https://huggingface.co/.../model.gguf</string>
+    <string name="download_url_example">Paste a direct download link (.gguf). Works with HuggingFace and other direct links.</string>
+    <string name="download_start">Download</string>
+    <string name="download_progress_label">Downloading %s…</string>
+    <string name="download_progress_bytes">%d%% · %.1f MB / %.1f MB</string>
+    <string name="download_done">Downloaded: %s ✓</string>
+    <string name="download_error">⚠ Error: %s</string>
+
+    <!-- Onboarding (Phase 9 v1.9.1) -->
+    <string name="onboarding_welcome_title">Welcome to QuantMA Lite</string>
+    <string name="onboarding_welcome_body">A local AI coding assistant running entirely on your device. No internet required.</string>
+    <string name="onboarding_model_title">Add a Language Model</string>
+    <string name="onboarding_model_body">Copy a .gguf model file to the models/ folder, or download one from the catalog below.</string>
+    <string name="onboarding_ready_title">All Set!</string>
+    <string name="onboarding_ready_body">Open the chat and start talking to your AI assistant. Everything runs locally.</string>
+    <string name="onboarding_next">Next →</string>
+    <string name="onboarding_start">Get Started</string>
+
+    <!-- Model Catalog (Phase 9 v1.9.1 → v2.0) -->
+    <string name="model_catalog">Model Catalog</string>
+    <string name="catalog_download">Download</string>
+    <string name="catalog_downloading">Downloading…</string>
+    <string name="catalog_done">✓ Done</string>
+    <string name="catalog_error">Error</string>
+    <string name="catalog_cancel">Cancel</string>
+    <string name="catalog_specs">Specifications</string>
+    <string name="catalog_spec_params">Parameters</string>
+    <string name="catalog_spec_quant">Quantization</string>
+    <string name="catalog_spec_size">Download size</string>
+    <string name="catalog_spec_ram">RAM required</string>
+    <string name="catalog_capabilities">Capabilities</string>
+    <string name="catalog_vision_note">Vision file will be downloaded separately</string>
+    <string name="catalog_cat_compact">Compact models</string>
+    <string name="catalog_cat_coding">Code models</string>
+    <string name="catalog_cat_general">General purpose</string>
+    <string name="catalog_cat_multimodal">Multimodal (Vision + Text)</string>
+    <string name="catalog_chip_compact">Compact</string>
+    <string name="catalog_chip_coding">Code</string>
+    <string name="catalog_chip_general">General</string>
+    <string name="catalog_chip_multimodal">Vision</string>
+
+    <!-- LoRA Adapter (Phase 10 v1.9.0) -->
+    <string name="section_lora">LoRA Adapter</string>
+    <string name="lora_use_adapter">Use LoRA Adapter</string>
+    <string name="lora_hint">Load a LoRA fine-tune adapter (.gguf) on top of the base model. Requires model reload.</string>
+    <string name="lora_path">LoRA File</string>
+    <string name="lora_path_hint">Select a .gguf adapter file</string>
+    <string name="lora_scale">Scale</string>
+    <string name="lora_scale_hint">Adapter weight: 1.0 = full strength, 0.0 = disabled</string>
+
+    <!-- Settings UX (v1.9.2) -->
+    <string name="hint_threads">Number of CPU threads for inference. Higher = faster if your device has many cores, but may overheat.</string>
+    <string name="hint_context_size">Max tokens the model holds in memory at once. Higher = longer conversations, but uses more RAM.</string>
+    <string name="hint_top_p">Nucleus sampling: lower values make output more focused; 1.0 = no filtering.</string>
+    <string name="hint_repeat_penalty">Penalizes repeating the same words. 1.0 = none; 1.3 = moderate; too high may cause incoherence.</string>
+
+    <!-- Auto-config hints -->
+    <string name="hint_auto_threads">Auto: uses performance cores minus 1, leaving room for the UI thread.</string>
+    <string name="hint_auto_context_size">Auto: sized based on available RAM and model size for optimal balance.</string>
+    <string name="hint_auto_batch_size">Auto: larger batches for faster prompt processing, scaled to available RAM.</string>
+    <string name="hint_auto_flash_attention">Auto: enabled for contexts ≥ 2048 tokens for faster attention computation.</string>
+    <string name="hint_auto_mlock">Auto: locks model in RAM if enough memory is available to prevent paging.</string>
+    <string name="hint_auto_gpu_layers">Auto: offloads optimal number of layers based on GPU backend and model size.</string>
+    <string name="hint_auto_sampling">Auto: uses balanced defaults optimized for general use.</string>
+
+    <!-- New inference params -->
+    <string name="batch_size">Batch Size</string>
+    <string name="hint_batch_size">Number of tokens to process in one batch during prompt evaluation. Higher = faster prompt processing.</string>
+    <string name="flash_attention">Flash Attention</string>
+    <string name="hint_flash_attention">Speeds up attention computation, especially with longer contexts. Safe on modern ARM64.</string>
+    <string name="mlock">Lock in RAM</string>
+    <string name="hint_mlock">Prevents Android from paging model weights to disk. Uses more RAM but avoids stuttering.</string>
+
+    <!-- Extended sampling params -->
+    <string name="sampling_top_k">Top-K</string>
+    <string name="hint_top_k">Limits sampling to top K most likely tokens. 0 = disabled; 40 = balanced.</string>
+    <string name="sampling_min_p">Min-P</string>
+    <string name="hint_min_p">Filters tokens with probability below min_p × max_prob. Modern alternative to Top-K.</string>
+    <string name="sampling_penalty_last_n">Penalty Window</string>
+    <string name="hint_penalty_last_n">How many recent tokens to check for repetition. 0 = disabled; 64 = standard.</string>
+    <string name="hint_max_rounds">Maximum agent tool-use steps per request. Prevents infinite loops.</string>
+    <string name="pick_folder">Pick Folder</string>
+    <string name="clone_from_git">Clone from Git</string>
+    <string name="working_dir_hint">Agent can only read/write files within this directory</string>
+    <string name="done">Done</string>
+
+    <!-- Settings Mode (v2.7.0) -->
+    <string name="settings_mode_label">Settings Mode</string>
+    <string name="settings_mode_simple">Simple — essential settings only</string>
+    <string name="settings_mode_advanced">Advanced — all settings visible</string>
+    <string name="color_presets">Presets</string>
+
+    <!-- RAG / Knowledge Base (Phase 11 v2.0.0) -->
+    <string name="section_rag">Knowledge Base</string>
+    <string name="rag_enable">Enable RAG Index</string>
+    <string name="rag_hint">Indexes your codebase so the agent can search by content using the rag_search tool</string>
+    <string name="rag_index_path">Index Path</string>
+    <string name="rag_reindex">Reindex Now</string>
+    <string name="rag_indexing">Indexing…</string>
+    <string name="rag_not_indexed">Not indexed yet. Tap Reindex.</string>
+</resources>

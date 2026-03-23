@@ -1,0 +1,47 @@
+# Build artifacts
+.gradle/
+build/
+app/build/
+.cxx/
+local.properties
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Secrets
+.env
+*.jks
+*.keystore
+
+# Model files
+*.gguf
+*.bin
+
+# MCP
+.mcp.json
+
+# Build output logs
+build_*.txt
