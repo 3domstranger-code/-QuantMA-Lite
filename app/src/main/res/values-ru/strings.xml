@@ -419,4 +419,35 @@
     <string name="rag_reindex">Переиндексировать</string>
     <string name="rag_indexing">Индексация…</string>
     <string name="rag_not_indexed">Ещё не проиндексировано. Нажмите Переиндексировать.</string>
+
+    <!-- v2.11.0 additions -->
+    <string name="close">Закрыть</string>
+    <string name="thermal_normal">Норма</string>
+    <string name="thermal_warm">Тепло</string>
+    <string name="thermal_hot">Горячо</string>
+    <string name="thermal_very_hot">Очень горячо</string>
+    <string name="thermal_critical">Критично</string>
+    <string name="selection_n_selected">%d выбрано</string>
+    <string name="selection_cancel">Отмена</string>
+    <string name="selection_select_all">Выбрать все</string>
+    <string name="selection_delete_selected">Удалить выбранные</string>
+    <string name="status_panel_label">Панель статуса</string>
+    <string name="export_chat">Экспорт чата</string>
+    <string name="export_pick_format">Выберите формат для сохранения в Downloads</string>
+    <string name="question_chips_hint">Модель задаёт вопрос — выберите вариант или напишите свой:</string>
+    <string name="question_chips_dismiss">Скрыть</string>
+    <string name="section_colors_title">Цвета интерфейса</string>
+    <string name="color_thermal_ok">Температура: норма</string>
+    <string name="color_thermal_warn">Температура: тепло</string>
+    <string name="color_thermal_hot_label">Температура: горячо</string>
+    <string name="color_cpu_high">CPU: высокая нагрузка</string>
+    <string name="color_gpu_bar">Полоса GPU</string>
+    <string name="color_backend_badge">Бейдж бэкенда</string>
+    <string name="color_hex_hint">Hex-цвет, например #FF4DD0E1</string>
+    <string name="edit_skill">Редактировать скил</string>
+    <string name="edit_rule">Редактировать правило</string>
+    <string name="edit_hook">Редактировать хук</string>
+    <string name="tap_to_edit">Нажмите для редактирования</string>
+    <string name="view_details">Подробнее</string>
+    <string name="read_only_built_in">Встроенные элементы доступны только для чтения</string>
 </resources>

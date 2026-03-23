@@ -130,6 +130,14 @@ fun SettingsScreen(
     val customAccent by viewModel.customAccent.collectAsState()
     val customPanel by viewModel.customPanel.collectAsState()
 
+    // Extended colors (v2.11.0)
+    val customThermalOk by viewModel.customThermalOk.collectAsState()
+    val customThermalWarn by viewModel.customThermalWarn.collectAsState()
+    val customThermalHot by viewModel.customThermalHot.collectAsState()
+    val customCpuHigh by viewModel.customCpuHigh.collectAsState()
+    val customGpuBar by viewModel.customGpuBar.collectAsState()
+    val customBackendBadge by viewModel.customBackendBadge.collectAsState()
+
     val advancedMode by viewModel.advancedMode.collectAsState()
 
     // Auto/manual mode flags
@@ -1254,6 +1262,64 @@ fun SettingsScreen(
                                 hex = customPanel,
                                 onHexChange = { viewModel.setCustomPanel(it) }
                             )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            // Extended colors — collapsible subsection
+                            var extColorsExpanded by remember { mutableStateOf(false) }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { extColorsExpanded = !extColorsExpanded }
+                                    .padding(vertical = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.section_colors_title),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Icon(
+                                    if (extColorsExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            AnimatedVisibility(visible = extColorsExpanded) {
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_thermal_ok),
+                                        hex = customThermalOk,
+                                        onHexChange = { viewModel.setCustomThermalOk(it) }
+                                    )
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_thermal_warn),
+                                        hex = customThermalWarn,
+                                        onHexChange = { viewModel.setCustomThermalWarn(it) }
+                                    )
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_thermal_hot_label),
+                                        hex = customThermalHot,
+                                        onHexChange = { viewModel.setCustomThermalHot(it) }
+                                    )
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_cpu_high),
+                                        hex = customCpuHigh,
+                                        onHexChange = { viewModel.setCustomCpuHigh(it) }
+                                    )
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_gpu_bar),
+                                        hex = customGpuBar,
+                                        onHexChange = { viewModel.setCustomGpuBar(it) }
+                                    )
+                                    ColorPalettePicker(
+                                        label = stringResource(R.string.color_backend_badge),
+                                        hex = customBackendBadge,
+                                        onHexChange = { viewModel.setCustomBackendBadge(it) }
+                                    )
+                                }
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
                             TextButton(onClick = { viewModel.resetCustomTheme() }) {

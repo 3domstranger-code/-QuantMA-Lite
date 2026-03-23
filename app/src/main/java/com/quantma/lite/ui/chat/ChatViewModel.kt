@@ -23,6 +23,7 @@ import com.quantma.lite.data.inference.InferenceAutoConfig
 import com.quantma.lite.data.inference.InferenceState
 import com.quantma.lite.data.inference.LlamaInference
 import com.quantma.lite.data.performance.CpuGpuMonitor
+import com.quantma.lite.service.InferenceService
 import com.quantma.lite.data.performance.MemoryMonitor
 import com.quantma.lite.data.performance.ThermalMonitor
 import com.quantma.lite.data.inference.PromptFormatter
@@ -189,6 +190,50 @@ class ChatViewModel @Inject constructor(
     // CPU/GPU load (v0.11.0)
     val cpuLoad: StateFlow<Float> = cpuGpuMonitor.cpuLoad
     val gpuLoad: StateFlow<Float> = cpuGpuMonitor.gpuLoad
+
+    // ---- Detected model questions (shown as clickable chips after generation) ----
+    private val _detectedQuestions = MutableStateFlow<List<String>>(emptyList())
+    val detectedQuestions: StateFlow<List<String>> = _detectedQuestions.asStateFlow()
+
+    fun dismissDetectedQuestions() { _detectedQuestions.value = emptyList() }
+
+    fun submitDetectedQuestion(question: String) {
+        dismissDetectedQuestions()
+        val sessionId = _currentSessionId.value
+        if (sessionId > 0L) {
+            viewModelScope.launch {
+                chatRepository.insertMessage(
+                    ChatMessage(sessionId = sessionId, role = Role.USER, content = question)
+                )
+                if (_isAgentMode.value) runAgentLoop(question) else generateResponse()
+            }
+        }
+    }
+
+    /** Extract questions or numbered options from assistant text after generation. */
+    private fun detectQuestionsInText(text: String): List<String> {
+        if (text.isBlank()) return emptyList()
+
+        // 1. Numbered options: "1. Option text\n2. Option text"
+        val numberedPattern = Regex("""^\s*\d+[.)]\s+(.+)$""", RegexOption.MULTILINE)
+        val numbered = numberedPattern.findAll(text).map { it.groupValues[1].trim() }.toList()
+        if (numbered.size >= 2) return numbered.take(6)
+
+        // 2. Lettered options: "a) Option\nb) Option"
+        val letteredPattern = Regex("""^\s*[a-dа-г][.)]\s+(.+)$""", RegexOption.MULTILINE)
+        val lettered = letteredPattern.findAll(text).map { it.groupValues[1].trim() }.toList()
+        if (lettered.size >= 2) return lettered.take(6)
+
+        // 3. Lines ending with "?" in the last 5 lines — model is asking
+        val lastLines = text.trimEnd().lines().takeLast(5)
+        val questions = lastLines.filter { line ->
+            val t = line.trim()
+            t.endsWith("?") && t.length in 10..200
+        }.map { it.trim() }
+        if (questions.isNotEmpty()) return questions.take(3)
+
+        return emptyList()
+    }
 
     private val _isAgentMode = MutableStateFlow(false)
     val isAgentMode: StateFlow<Boolean> = _isAgentMode.asStateFlow()
@@ -1128,10 +1173,30 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    private fun startInferenceService() {
+        try {
+            val modelPath = kotlinx.coroutines.runBlocking {
+                settingsDataStore.modelPath.first()
+            }
+            val modelName = modelPath.substringAfterLast('/')
+                .removeSuffix(".gguf").take(24)
+            appContext.startService(InferenceService.startIntent(appContext, modelName))
+        } catch (e: Exception) {
+            Timber.w(e, "Could not start InferenceService")
+        }
+    }
+
+    private fun stopInferenceService() {
+        try { appContext.startService(InferenceService.stopIntent(appContext)) }
+        catch (e: Exception) { Timber.w(e, "Could not stop InferenceService") }
+    }
+
     private fun generateResponse() {
         val sessionId = _currentSessionId.value
         generationJob = viewModelScope.launch {
             _isGenerating.value = true
+            _detectedQuestions.value = emptyList()
+            startInferenceService()
             _streamingContent.value = ""
             _tokensPerSecond.value = 0f
 
@@ -1220,6 +1285,8 @@ class ChatViewModel @Inject constructor(
 
                 val finalContent = fullResponse.toString().ifEmpty { "(empty response)" }
                 chatRepository.updateMessageContent(placeholderId, finalContent)
+                // Detect questions/options in the response
+                _detectedQuestions.value = detectQuestionsInText(finalContent)
 
             } catch (e: kotlinx.coroutines.CancellationException) {
                 val partial = _streamingContent.value
@@ -1250,6 +1317,7 @@ class ChatViewModel @Inject constructor(
                 _isGenerating.value = false
                 _streamingContent.value = ""
                 _tokensPerSecond.value = 0f
+                stopInferenceService()
             }
         }
     }
@@ -1260,6 +1328,8 @@ class ChatViewModel @Inject constructor(
         val sessionId = _currentSessionId.value
         generationJob = viewModelScope.launch {
             _isGenerating.value = true
+            _detectedQuestions.value = emptyList()
+            startInferenceService()
             _streamingContent.value = ""
             _tokensPerSecond.value = 0f
             _agentSteps.value = emptyList()
@@ -1569,6 +1639,7 @@ class ChatViewModel @Inject constructor(
                 deleteApprovalDeferred = null
                 _pendingGitAction.value = null
                 gitActionDeferred = null
+                stopInferenceService()
             }
         }
     }

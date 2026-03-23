@@ -418,4 +418,35 @@
     <string name="rag_reindex">Reindex Now</string>
     <string name="rag_indexing">Indexing…</string>
     <string name="rag_not_indexed">Not indexed yet. Tap Reindex.</string>
+
+    <!-- v2.11.0 additions -->
+    <string name="close">Close</string>
+    <string name="thermal_normal">Normal</string>
+    <string name="thermal_warm">Warm</string>
+    <string name="thermal_hot">Hot</string>
+    <string name="thermal_very_hot">Very Hot</string>
+    <string name="thermal_critical">Critical</string>
+    <string name="selection_n_selected">%d selected</string>
+    <string name="selection_cancel">Cancel</string>
+    <string name="selection_select_all">Select All</string>
+    <string name="selection_delete_selected">Delete Selected</string>
+    <string name="status_panel_label">Status Panel</string>
+    <string name="export_chat">Export Chat</string>
+    <string name="export_pick_format">Choose format to save to Downloads</string>
+    <string name="question_chips_hint">The model is asking — pick an option or type your own:</string>
+    <string name="question_chips_dismiss">Dismiss</string>
+    <string name="section_colors_title">Interface Colors</string>
+    <string name="color_thermal_ok">Thermal OK</string>
+    <string name="color_thermal_warn">Thermal Warn</string>
+    <string name="color_thermal_hot_label">Thermal Hot</string>
+    <string name="color_cpu_high">CPU High Load</string>
+    <string name="color_gpu_bar">GPU Bar</string>
+    <string name="color_backend_badge">Backend Badge</string>
+    <string name="color_hex_hint">Hex color, e.g. #FF4DD0E1</string>
+    <string name="edit_skill">Edit Skill</string>
+    <string name="edit_rule">Edit Rule</string>
+    <string name="edit_hook">Edit Hook</string>
+    <string name="tap_to_edit">Tap to edit</string>
+    <string name="view_details">View Details</string>
+    <string name="read_only_built_in">Built-in items are read-only</string>
 </resources>

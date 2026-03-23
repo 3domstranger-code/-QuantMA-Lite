@@ -35,13 +35,27 @@ class MainActivity : AppCompatActivity() {
             val customAccent by settingsDataStore.customAccent.collectAsState(initial = "")
             val customPanel by settingsDataStore.customPanel.collectAsState(initial = "")
 
+            // Extended colors (v2.11.0)
+            val customThermalOk by settingsDataStore.customThermalOk.collectAsState(initial = "")
+            val customThermalWarn by settingsDataStore.customThermalWarn.collectAsState(initial = "")
+            val customThermalHot by settingsDataStore.customThermalHot.collectAsState(initial = "")
+            val customCpuHigh by settingsDataStore.customCpuHigh.collectAsState(initial = "")
+            val customGpuBar by settingsDataStore.customGpuBar.collectAsState(initial = "")
+            val customBackendBadge by settingsDataStore.customBackendBadge.collectAsState(initial = "")
+
             val customTheme = CustomThemeColors(
                 userBubble = CustomThemeColors.parseHex(customUserBubble),
                 assistantBubble = CustomThemeColors.parseHex(customAssistantBubble),
                 accent = CustomThemeColors.parseHex(customAccent),
                 panel = CustomThemeColors.parseHex(customPanel),
                 backgroundUri = customBgUri,
-                backgroundOpacity = customBgOpacity
+                backgroundOpacity = customBgOpacity,
+                thermalOkColor = CustomThemeColors.parseHex(customThermalOk),
+                thermalWarnColor = CustomThemeColors.parseHex(customThermalWarn),
+                thermalHotColor = CustomThemeColors.parseHex(customThermalHot),
+                cpuHighColor = CustomThemeColors.parseHex(customCpuHigh),
+                gpuBarColor = CustomThemeColors.parseHex(customGpuBar),
+                backendBadgeColor = CustomThemeColors.parseHex(customBackendBadge)
             )
 
             QuantMATheme(themeMode = themeMode, customTheme = customTheme) {

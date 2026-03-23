@@ -453,6 +453,21 @@ class SettingsViewModel @Inject constructor(
         initialValue = ""
     )
 
+    // Extended colors (v2.11.0)
+    val customThermalOk = settingsDataStore.customThermalOk.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val customThermalWarn = settingsDataStore.customThermalWarn.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val customThermalHot = settingsDataStore.customThermalHot.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val customCpuHigh = settingsDataStore.customCpuHigh.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val customGpuBar = settingsDataStore.customGpuBar.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+    val customBackendBadge = settingsDataStore.customBackendBadge.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
+    fun setCustomThermalOk(hex: String) { viewModelScope.launch { settingsDataStore.setCustomThermalOk(hex) } }
+    fun setCustomThermalWarn(hex: String) { viewModelScope.launch { settingsDataStore.setCustomThermalWarn(hex) } }
+    fun setCustomThermalHot(hex: String) { viewModelScope.launch { settingsDataStore.setCustomThermalHot(hex) } }
+    fun setCustomCpuHigh(hex: String) { viewModelScope.launch { settingsDataStore.setCustomCpuHigh(hex) } }
+    fun setCustomGpuBar(hex: String) { viewModelScope.launch { settingsDataStore.setCustomGpuBar(hex) } }
+    fun setCustomBackendBadge(hex: String) { viewModelScope.launch { settingsDataStore.setCustomBackendBadge(hex) } }
+
     fun setCustomBgUri(uri: String) {
         viewModelScope.launch { settingsDataStore.setCustomBgUri(uri) }
     }

@@ -63,6 +63,15 @@ class SettingsDataStore @Inject constructor(
         private val CUSTOM_ASSISTANT_BUBBLE_KEY = stringPreferencesKey("custom_assistant_bubble")
         private val CUSTOM_ACCENT_KEY = stringPreferencesKey("custom_accent")
         private val CUSTOM_PANEL_KEY = stringPreferencesKey("custom_panel")
+        // Model load failure tracking (crash-loop protection)
+        private val MODEL_LOAD_FAIL_COUNT_KEY = intPreferencesKey("model_load_fail_count")
+        // Extended colors (v2.11.0)
+        private val CUSTOM_THERMAL_OK_KEY = stringPreferencesKey("custom_thermal_ok")
+        private val CUSTOM_THERMAL_WARN_KEY = stringPreferencesKey("custom_thermal_warn")
+        private val CUSTOM_THERMAL_HOT_KEY = stringPreferencesKey("custom_thermal_hot")
+        private val CUSTOM_CPU_HIGH_KEY = stringPreferencesKey("custom_cpu_high")
+        private val CUSTOM_GPU_BAR_KEY = stringPreferencesKey("custom_gpu_bar")
+        private val CUSTOM_BACKEND_BADGE_KEY = stringPreferencesKey("custom_backend_badge")
         // Settings mode (v2.7.0)
         private val ADVANCED_MODE_KEY = booleanPreferencesKey("advanced_mode")
 
@@ -384,6 +393,21 @@ class SettingsDataStore @Inject constructor(
     suspend fun setCustomPanel(hex: String) {
         context.dataStore.edit { prefs -> prefs[CUSTOM_PANEL_KEY] = hex }
     }
+
+    // Extended colors (v2.11.0)
+    val customThermalOk: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_THERMAL_OK_KEY] ?: "" }
+    val customThermalWarn: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_THERMAL_WARN_KEY] ?: "" }
+    val customThermalHot: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_THERMAL_HOT_KEY] ?: "" }
+    val customCpuHigh: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_CPU_HIGH_KEY] ?: "" }
+    val customGpuBar: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_GPU_BAR_KEY] ?: "" }
+    val customBackendBadge: Flow<String> = context.dataStore.data.map { prefs -> prefs[CUSTOM_BACKEND_BADGE_KEY] ?: "" }
+
+    suspend fun setCustomThermalOk(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_THERMAL_OK_KEY] = hex } }
+    suspend fun setCustomThermalWarn(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_THERMAL_WARN_KEY] = hex } }
+    suspend fun setCustomThermalHot(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_THERMAL_HOT_KEY] = hex } }
+    suspend fun setCustomCpuHigh(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_CPU_HIGH_KEY] = hex } }
+    suspend fun setCustomGpuBar(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_GPU_BAR_KEY] = hex } }
+    suspend fun setCustomBackendBadge(hex: String) { context.dataStore.edit { prefs -> prefs[CUSTOM_BACKEND_BADGE_KEY] = hex } }
 
     // Settings mode (v2.7.0)
     val advancedMode: Flow<Boolean> = context.dataStore.data.map { prefs ->

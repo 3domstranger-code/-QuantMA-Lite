@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.quantma.lite.R
 import com.quantma.lite.ui.chat.ModelStatus
+import com.quantma.lite.ui.theme.LocalCustomTheme
 
 @Composable
 fun ModelStatusIndicator(
@@ -31,6 +32,8 @@ fun ModelStatusIndicator(
     totalRamMb: Long = 0L,
     backendInfo: String = "CPU only",
     sessionTokensTotal: Int = 0,
+    cpuLoad: Float = -1f,
+    gpuLoad: Float = -1f,
     modifier: Modifier = Modifier
 ) {
     val (color, label) = when (status) {
@@ -53,12 +56,13 @@ fun ModelStatusIndicator(
         ModelStatus.ERROR -> Color.Red to stringResource(R.string.status_error)
     }
 
+    val ct = LocalCustomTheme.current
     val thermalColor = when (thermalStatus) {
-        0 -> Color.Green
-        1 -> Color(0xFFFFD700) // Yellow/Warm
-        2 -> Color(0xFFFFA500) // Orange/Hot
-        3 -> Color(0xFFFF4500) // OrangeRed/Very Hot
-        else -> Color.Red      // Critical (4+)
+        0 -> ct.thermalOkColor ?: Color.Green
+        1 -> ct.thermalWarnColor ?: Color(0xFFFFD700)
+        2 -> ct.thermalHotColor ?: Color(0xFFFFA500)
+        3 -> ct.thermalHotColor?.copy(red = 1f) ?: Color(0xFFFF4500)
+        else -> ct.cpuHighColor ?: Color.Red
     }
 
     val modelLoaded = status != ModelStatus.NOT_LOADED && status != ModelStatus.ERROR
@@ -118,7 +122,7 @@ fun ModelStatusIndicator(
                 Text(
                     text = badge,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF4FC3F7)
+                    color = ct.backendBadgeColor ?: Color(0xFF4FC3F7)
                 )
             }
 
@@ -129,6 +133,34 @@ fun ModelStatusIndicator(
                     text = "${sessionTokensTotal}t",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
+
+            // Mini CPU indicator
+            if (cpuLoad >= 0f) {
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "C:${cpuLoad.toInt()}%",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = when {
+                        cpuLoad > 90f -> Color.Red
+                        cpuLoad > 70f -> Color(0xFFFFA500)
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    }
+                )
+            }
+
+            // Mini GPU indicator
+            if (gpuLoad >= 0f) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "G:${gpuLoad.toInt()}%",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = when {
+                        gpuLoad > 90f -> Color.Red
+                        gpuLoad > 70f -> Color(0xFFFFA500)
+                        else -> Color(0xFF4FC3F7).copy(alpha = 0.8f)
+                    }
                 )
             }
         }

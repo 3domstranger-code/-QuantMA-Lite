@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -64,6 +65,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -123,6 +125,9 @@ fun ChatScreen(
     val backendInfo by viewModel.backendInfo.collectAsState()
     val sessionTokensTotal by viewModel.sessionTokensTotal.collectAsState()
     val codeBlockFontSize by viewModel.codeBlockFontSize.collectAsState()
+    val cpuLoad by viewModel.cpuLoad.collectAsState()
+    val gpuLoad by viewModel.gpuLoad.collectAsState()
+    val detectedQuestions by viewModel.detectedQuestions.collectAsState()
 
     val listState = rememberLazyListState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -142,19 +147,41 @@ fun ChatScreen(
     var selectedIds by remember { mutableStateOf(setOf<Long>()) }
     val selectionMode = selectedIds.isNotEmpty()
 
+    // ---- Smart auto-scroll: respect user scroll position ----
+    val isAtBottom by remember {
+        derivedStateOf {
+            val layout = listState.layoutInfo
+            val totalItems = layout.totalItemsCount
+            if (totalItems == 0) return@derivedStateOf true
+            val lastVisible = layout.visibleItemsInfo.lastOrNull()?.index ?: 0
+            lastVisible >= totalItems - 2
+        }
+    }
+    var autoScrollEnabled by rememberSaveable { mutableStateOf(true) }
+
+    LaunchedEffect(isAtBottom) {
+        if (isAtBottom) autoScrollEnabled = true
+    }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (listState.isScrollInProgress && !isAtBottom) {
+            autoScrollEnabled = false
+        }
+    }
+
+    LaunchedEffect(isGenerating) {
+        if (isGenerating) autoScrollEnabled = true
+    }
+
     val scrollTrigger = displayedMessages.size + agentSteps.size + streamingContent.length +
         (if (pendingWrite != null) 1 else 0) + (if (pendingDelete != null) 1 else 0) +
         (if (pendingGitAction != null) 1 else 0)
     LaunchedEffect(scrollTrigger) {
-        if (!searchActive) {
-            val layout = listState.layoutInfo
-            val lastIndex = layout.totalItemsCount - 1
+        if (!searchActive && autoScrollEnabled) {
+            val lastIndex = listState.layoutInfo.totalItemsCount - 1
             if (lastIndex >= 0) {
-                val lastVisible = layout.visibleItemsInfo.lastOrNull()?.index ?: -1
-                // Only auto-scroll if user is already near the bottom (within 2 items)
-                if (lastVisible >= lastIndex - 2) {
-                    listState.animateScrollToItem(lastIndex)
-                }
+                kotlinx.coroutines.delay(50)
+                listState.animateScrollToItem(lastIndex)
             }
         }
     }
@@ -232,7 +259,9 @@ fun ChatScreen(
                             availRamMb = ramAvailMb,
                             totalRamMb = ramTotalMb,
                             backendInfo = backendInfo,
-                            sessionTokensTotal = sessionTokensTotal
+                            sessionTokensTotal = sessionTokensTotal,
+                            cpuLoad = cpuLoad,
+                            gpuLoad = gpuLoad
                         )
                     },
                     navigationIcon = {
@@ -276,9 +305,6 @@ fun ChatScreen(
                         animationSpec = androidx.compose.animation.core.tween(300)
                     )
                 ) {
-                    val cpuLoad by viewModel.cpuLoad.collectAsState()
-                    val gpuLoad by viewModel.gpuLoad.collectAsState()
-
                     androidx.compose.foundation.layout.Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -681,6 +707,15 @@ fun ChatScreen(
                 )
             }
 
+            // Question chips: shown after generation when model asks a question or offers options
+            if (detectedQuestions.isNotEmpty() && !isGenerating) {
+                QuestionChipsRow(
+                    questions = detectedQuestions,
+                    onQuestionSelected = { viewModel.submitDetectedQuestion(it) },
+                    onDismiss = { viewModel.dismissDetectedQuestions() }
+                )
+            }
+
             InputBar(
                 onSend = { viewModel.sendMessage(it) },
                 onStop = { viewModel.stopGeneration() },
@@ -688,6 +723,63 @@ fun ChatScreen(
                 isAgentMode = isAgentMode,
                 enabled = !isGenerating,
             )
+        }
+    }
+}
+
+/**
+ * Horizontal scrollable row of suggestion chips extracted from the last assistant response.
+ * Tapping a chip submits it as a new user message.
+ */
+@Composable
+private fun QuestionChipsRow(
+    questions: List<String>,
+    onQuestionSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.question_chips_hint),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = stringResource(R.string.question_chips_dismiss),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        androidx.compose.foundation.lazy.LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 2.dp)
+        ) {
+            items(questions.size) { i ->
+                androidx.compose.material3.SuggestionChip(
+                    onClick = { onQuestionSelected(questions[i]) },
+                    label = {
+                        Text(
+                            text = questions[i],
+                            maxLines = 2,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
+                    modifier = Modifier.widthIn(max = 240.dp)
+                )
+            }
         }
     }
 }

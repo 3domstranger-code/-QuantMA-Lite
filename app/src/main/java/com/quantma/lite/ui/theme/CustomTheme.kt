@@ -14,7 +14,14 @@ data class CustomThemeColors(
     val accent: Color? = null,
     val panel: Color? = null,
     val backgroundUri: String = "",
-    val backgroundOpacity: Float = 0.15f
+    val backgroundOpacity: Float = 0.15f,
+    // Extended colors (v2.11.0)
+    val thermalOkColor: Color? = null,      // default: Color.Green
+    val thermalWarnColor: Color? = null,    // default: Color(0xFFFFD700)
+    val thermalHotColor: Color? = null,     // default: Color(0xFFFFA500)
+    val cpuHighColor: Color? = null,        // default: Color.Red
+    val gpuBarColor: Color? = null,         // default: Color(0xFF4FC3F7)
+    val backendBadgeColor: Color? = null    // default: Color(0xFF4FC3F7)
 ) {
     companion object {
         val Default = CustomThemeColors()

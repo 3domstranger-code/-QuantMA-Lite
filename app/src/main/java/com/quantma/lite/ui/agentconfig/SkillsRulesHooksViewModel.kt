@@ -59,6 +59,19 @@ class SkillsRulesHooksViewModel @Inject constructor(
         }
     }
 
+    fun updateSkill(skill: SkillEntity, name: String, description: String, triggerPatterns: String, promptInjection: String) {
+        viewModelScope.launch {
+            skillDao.update(
+                skill.copy(
+                    name = name,
+                    description = description,
+                    triggerPatterns = triggerPatterns,
+                    promptInjection = promptInjection
+                )
+            )
+        }
+    }
+
     // ---- Rules ----
 
     fun toggleRule(id: Long, enabled: Boolean) {
@@ -82,6 +95,12 @@ class SkillsRulesHooksViewModel @Inject constructor(
         }
     }
 
+    fun updateRule(rule: RuleEntity, category: String, instruction: String) {
+        viewModelScope.launch {
+            ruleDao.update(rule.copy(category = category, instruction = instruction))
+        }
+    }
+
     // ---- Hooks ----
 
     fun toggleHook(id: Long, enabled: Boolean) {
@@ -102,6 +121,12 @@ class SkillsRulesHooksViewModel @Inject constructor(
                     isBuiltIn = false
                 )
             )
+        }
+    }
+
+    fun updateHook(hook: HookEntity, trigger: String, action: String) {
+        viewModelScope.launch {
+            hookDao.update(hook.copy(trigger = trigger, action = action))
         }
     }
 }

@@ -39,7 +39,7 @@ class CpuGpuMonitor @Inject constructor() {
             while (true) {
                 _cpuLoad.value = readCpuLoad()
                 _gpuLoad.value = readGpuLoad()
-                delay(3_000)
+                delay(1_000)
             }
         }
     }

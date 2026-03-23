@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Webhook
 import androidx.compose.material3.AlertDialog
@@ -162,24 +163,38 @@ fun SkillsRulesHooksScreen(
 
 @Composable
 private fun SkillsTab(skills: List<SkillEntity>, viewModel: SkillsRulesHooksViewModel) {
+    var editingSkill by remember { mutableStateOf<SkillEntity?>(null) }
+
     if (skills.isEmpty()) {
         EmptyState(stringResource(R.string.skills_empty))
-        return
-    }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(skills, key = { it.id }) { skill ->
-            SkillCard(
-                skill = skill,
-                onToggle = { viewModel.toggleSkill(skill.id, it) },
-                onDelete = if (!skill.isBuiltIn) {{ viewModel.deleteSkill(skill) }} else null
-            )
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(skills, key = { it.id }) { skill ->
+                SkillCard(
+                    skill = skill,
+                    onToggle = { viewModel.toggleSkill(skill.id, it) },
+                    onDelete = if (!skill.isBuiltIn) {{ viewModel.deleteSkill(skill) }} else null,
+                    onEdit = if (!skill.isBuiltIn) {{ editingSkill = skill }} else null
+                )
+            }
+            item { Spacer(modifier = Modifier.height(72.dp)) }
         }
-        item { Spacer(modifier = Modifier.height(72.dp)) }
+    }
+
+    editingSkill?.let { skill ->
+        EditSkillDialog(
+            skill = skill,
+            onDismiss = { editingSkill = null },
+            onConfirm = { name, desc, triggers, prompt ->
+                viewModel.updateSkill(skill, name, desc, triggers, prompt)
+                editingSkill = null
+            }
+        )
     }
 }
 
@@ -187,7 +202,8 @@ private fun SkillsTab(skills: List<SkillEntity>, viewModel: SkillsRulesHooksView
 private fun SkillCard(
     skill: SkillEntity,
     onToggle: (Boolean) -> Unit,
-    onDelete: (() -> Unit)?
+    onDelete: (() -> Unit)?,
+    onEdit: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -242,6 +258,16 @@ private fun SkillCard(
                     checked = skill.isEnabled,
                     onCheckedChange = onToggle
                 )
+                if (onEdit != null) {
+                    IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit_skill),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
                 if (onDelete != null) {
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
                         Icon(
@@ -261,24 +287,38 @@ private fun SkillCard(
 
 @Composable
 private fun RulesTab(rules: List<RuleEntity>, viewModel: SkillsRulesHooksViewModel) {
+    var editingRule by remember { mutableStateOf<RuleEntity?>(null) }
+
     if (rules.isEmpty()) {
         EmptyState(stringResource(R.string.rules_empty))
-        return
-    }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(rules, key = { it.id }) { rule ->
-            RuleCard(
-                rule = rule,
-                onToggle = { viewModel.toggleRule(rule.id, it) },
-                onDelete = if (!rule.isBuiltIn) {{ viewModel.deleteRule(rule) }} else null
-            )
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(rules, key = { it.id }) { rule ->
+                RuleCard(
+                    rule = rule,
+                    onToggle = { viewModel.toggleRule(rule.id, it) },
+                    onDelete = if (!rule.isBuiltIn) {{ viewModel.deleteRule(rule) }} else null,
+                    onEdit = if (!rule.isBuiltIn) {{ editingRule = rule }} else null
+                )
+            }
+            item { Spacer(modifier = Modifier.height(72.dp)) }
         }
-        item { Spacer(modifier = Modifier.height(72.dp)) }
+    }
+
+    editingRule?.let { rule ->
+        EditRuleDialog(
+            rule = rule,
+            onDismiss = { editingRule = null },
+            onConfirm = { category, instruction ->
+                viewModel.updateRule(rule, category, instruction)
+                editingRule = null
+            }
+        )
     }
 }
 
@@ -286,7 +326,8 @@ private fun RulesTab(rules: List<RuleEntity>, viewModel: SkillsRulesHooksViewMod
 private fun RuleCard(
     rule: RuleEntity,
     onToggle: (Boolean) -> Unit,
-    onDelete: (() -> Unit)?
+    onDelete: (() -> Unit)?,
+    onEdit: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -340,6 +381,16 @@ private fun RuleCard(
                     checked = rule.isEnabled,
                     onCheckedChange = onToggle
                 )
+                if (onEdit != null) {
+                    IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit_rule),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
                 if (onDelete != null) {
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
                         Icon(
@@ -359,24 +410,38 @@ private fun RuleCard(
 
 @Composable
 private fun HooksTab(hooks: List<HookEntity>, viewModel: SkillsRulesHooksViewModel) {
+    var editingHook by remember { mutableStateOf<HookEntity?>(null) }
+
     if (hooks.isEmpty()) {
         EmptyState(stringResource(R.string.hooks_empty))
-        return
-    }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(hooks, key = { it.id }) { hook ->
-            HookCard(
-                hook = hook,
-                onToggle = { viewModel.toggleHook(hook.id, it) },
-                onDelete = if (!hook.isBuiltIn) {{ viewModel.deleteHook(hook) }} else null
-            )
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(hooks, key = { it.id }) { hook ->
+                HookCard(
+                    hook = hook,
+                    onToggle = { viewModel.toggleHook(hook.id, it) },
+                    onDelete = if (!hook.isBuiltIn) {{ viewModel.deleteHook(hook) }} else null,
+                    onEdit = if (!hook.isBuiltIn) {{ editingHook = hook }} else null
+                )
+            }
+            item { Spacer(modifier = Modifier.height(72.dp)) }
         }
-        item { Spacer(modifier = Modifier.height(72.dp)) }
+    }
+
+    editingHook?.let { hook ->
+        EditHookDialog(
+            hook = hook,
+            onDismiss = { editingHook = null },
+            onConfirm = { trigger, action ->
+                viewModel.updateHook(hook, trigger, action)
+                editingHook = null
+            }
+        )
     }
 }
 
@@ -384,7 +449,8 @@ private fun HooksTab(hooks: List<HookEntity>, viewModel: SkillsRulesHooksViewMod
 private fun HookCard(
     hook: HookEntity,
     onToggle: (Boolean) -> Unit,
-    onDelete: (() -> Unit)?
+    onDelete: (() -> Unit)?,
+    onEdit: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -438,6 +504,16 @@ private fun HookCard(
                     checked = hook.isEnabled,
                     onCheckedChange = onToggle
                 )
+                if (onEdit != null) {
+                    IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit_hook),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
                 if (onDelete != null) {
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
                         Icon(
@@ -643,6 +719,218 @@ private fun AddHookDialog(
                         onDismissRequest = { expanded = false }
                     ) {
                         triggers.forEach { trig ->
+                            DropdownMenuItem(
+                                text = { Text(formatTriggerDisplay(trig)) },
+                                onClick = {
+                                    selectedTrigger = trig
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = action,
+                    onValueChange = { action = it },
+                    label = { Text(stringResource(R.string.hook_action)) },
+                    placeholder = { Text(stringResource(R.string.hook_action_hint)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    maxLines = 5
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedTrigger, action.trim()) },
+                enabled = action.isNotBlank()
+            ) {
+                Text(stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+// ======== Edit Dialogs ========
+
+@Composable
+private fun EditSkillDialog(
+    skill: SkillEntity,
+    onDismiss: () -> Unit,
+    onConfirm: (name: String, description: String, triggers: String, prompt: String) -> Unit
+) {
+    var name by remember { mutableStateOf(skill.name) }
+    var description by remember { mutableStateOf(skill.description) }
+    var triggers by remember { mutableStateOf(skill.triggerPatterns) }
+    var prompt by remember { mutableStateOf(skill.promptInjection) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.edit_skill)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(stringResource(R.string.skill_name)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text(stringResource(R.string.skill_description)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = triggers,
+                    onValueChange = { triggers = it },
+                    label = { Text(stringResource(R.string.skill_triggers)) },
+                    placeholder = { Text(stringResource(R.string.skill_triggers_hint)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = prompt,
+                    onValueChange = { prompt = it },
+                    label = { Text(stringResource(R.string.skill_prompt)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    maxLines = 5
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(name.trim(), description.trim(), triggers.trim(), prompt.trim()) },
+                enabled = name.isNotBlank() && triggers.isNotBlank() && prompt.isNotBlank()
+            ) {
+                Text(stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditRuleDialog(
+    rule: RuleEntity,
+    onDismiss: () -> Unit,
+    onConfirm: (category: String, instruction: String) -> Unit
+) {
+    val categories = listOf("CODE_STYLE", "ARCHITECTURE", "SECURITY", "COMMENTS")
+    var selectedCategory by remember { mutableStateOf(rule.category) }
+    var instruction by remember { mutableStateOf(rule.instruction) }
+    var expanded by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.edit_rule)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it }
+                ) {
+                    OutlinedTextField(
+                        value = formatCategoryDisplay(selectedCategory),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.rule_category)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        categories.forEach { cat ->
+                            DropdownMenuItem(
+                                text = { Text(formatCategoryDisplay(cat)) },
+                                onClick = {
+                                    selectedCategory = cat
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = instruction,
+                    onValueChange = { instruction = it },
+                    label = { Text(stringResource(R.string.rule_instruction)) },
+                    placeholder = { Text(stringResource(R.string.rule_instruction_hint)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    maxLines = 5
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedCategory, instruction.trim()) },
+                enabled = instruction.isNotBlank()
+            ) {
+                Text(stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditHookDialog(
+    hook: HookEntity,
+    onDismiss: () -> Unit,
+    onConfirm: (trigger: String, action: String) -> Unit
+) {
+    val triggerOptions = listOf("PRE_COMMIT", "POST_COMMIT", "ON_FILE_CHANGE", "ON_ERROR")
+    var selectedTrigger by remember { mutableStateOf(hook.trigger) }
+    var action by remember { mutableStateOf(hook.action) }
+    var expanded by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.edit_hook)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it }
+                ) {
+                    OutlinedTextField(
+                        value = formatTriggerDisplay(selectedTrigger),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.hook_trigger)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        triggerOptions.forEach { trig ->
                             DropdownMenuItem(
                                 text = { Text(formatTriggerDisplay(trig)) },
                                 onClick = {
