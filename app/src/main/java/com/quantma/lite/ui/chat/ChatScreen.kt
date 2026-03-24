@@ -5,7 +5,12 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -100,7 +105,8 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
-    viewModel: ChatViewModel = hiltViewModel()
+    viewModel: ChatViewModel = hiltViewModel(),
+    onNavigateToCli: (() -> Unit)? = null
 ) {
     val messages by viewModel.messages.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -158,6 +164,8 @@ fun ChatScreen(
         }
     }
     var autoScrollEnabled by rememberSaveable { mutableStateOf(true) }
+    var chatTopOffsetDp by rememberSaveable { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
 
     LaunchedEffect(isAtBottom) {
         if (isAtBottom) autoScrollEnabled = true
@@ -280,6 +288,12 @@ fun ChatScreen(
                             )
                         ) {
                             Icon(Icons.Default.SmartToy, contentDescription = stringResource(R.string.agent_mode))
+                        }
+                        // CLI Terminal
+                        if (onNavigateToCli != null) {
+                            IconButton(onClick = onNavigateToCli) {
+                                Icon(Icons.Default.Code, contentDescription = "CLI")
+                            }
                         }
                         // Toggle expanded status panel
                         IconButton(onClick = { statusPanelExpanded = !statusPanelExpanded }) {
@@ -518,6 +532,34 @@ fun ChatScreen(
                         )
                     }
                 }
+                // Chat drag handle — drag top edge to reposition messages area vertically
+                if (messages.isNotEmpty() || isGenerating) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .align(Alignment.TopCenter)
+                            .pointerInput(Unit) {
+                                detectVerticalDragGestures { change, dragAmount ->
+                                    change.consume()
+                                    chatTopOffsetDp = (chatTopOffsetDp + dragAmount / density.density)
+                                        .coerceIn(0f, 300f)
+                                }
+                            }
+                            .pointerInput(Unit) {
+                                detectTapGestures(onDoubleTap = { chatTopOffsetDp = 0f })
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Surface(
+                            modifier = Modifier.size(width = 36.dp, height = 4.dp),
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                .copy(alpha = if (chatTopOffsetDp > 4f) 0.5f else 0.2f)
+                        ) {}
+                    }
+                }
+
                 if (messages.isEmpty() && !isGenerating) {
                     Column(
                         modifier = Modifier
@@ -548,7 +590,11 @@ fun ChatScreen(
                 } else {
                     LazyColumn(
                         state = listState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = chatTopOffsetDp.dp),
+                        contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
+                        verticalArrangement = Arrangement.Bottom
                     ) {
                         items(displayedMessages, key = { it.id }) { message ->
                             if (message.role == Role.ASSISTANT && message.content.isEmpty() && isGenerating) {

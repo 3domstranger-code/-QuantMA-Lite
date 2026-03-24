@@ -30,6 +30,7 @@ import com.quantma.lite.ui.git.GitScreen
 import com.quantma.lite.ui.git.credentials.GitCredentialsScreen
 import com.quantma.lite.ui.models.ModelCatalogScreen
 import com.quantma.lite.ui.onboarding.OnboardingScreen
+import com.quantma.lite.ui.cli.CliScreen
 import com.quantma.lite.ui.settings.LicensesScreen
 import com.quantma.lite.ui.settings.SettingsScreen
 
@@ -50,7 +51,8 @@ fun NavGraph(startDestination: String = Screen.Chat.route) {
                 currentRoute != "git_credentials" &&
                 currentRoute != "onboarding" &&
                 currentRoute != "model_catalog" &&
-                currentRoute != "licenses") {
+                currentRoute != "licenses" &&
+                currentRoute != "cli") {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 0.dp
@@ -96,7 +98,9 @@ fun NavGraph(startDestination: String = Screen.Chat.route) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Chat.route) {
-                ChatScreen()
+                ChatScreen(
+                    onNavigateToCli = { navController.navigate("cli") }
+                )
             }
             composable(Screen.Files.route) {
                 FileBrowserScreen(
@@ -175,6 +179,11 @@ fun NavGraph(startDestination: String = Screen.Chat.route) {
             }
             composable("model_catalog") {
                 ModelCatalogScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable("cli") {
+                CliScreen(
                     onBack = { navController.popBackStack() }
                 )
             }

@@ -53,6 +53,38 @@ class ToolExecutor @Inject constructor(
 
     private val ULTRA_STUB = "⚡ This feature is available in QuantMA Ultra. Visit quantma.app for details."
 
+    /**
+     * Returns a smart stub that previews the intent without executing it.
+     * Shows the user what WOULD happen — demonstrates the potential, hits the wall.
+     */
+    private fun writeFileStub(call: ToolCall.WriteFile): ToolResult {
+        val preview = call.content.take(300).let {
+            if (call.content.length > 300) "$it\n… (${call.content.length - 300} more chars)" else it
+        }
+        return ToolResult(call, false,
+            "📄 **Preview** — write_file would create/overwrite `${call.path}`:\n" +
+            "```\n$preview\n```\n\n" +
+            "⚡ File writes are disabled in QuantMA Lite. " +
+            "The agent correctly determined the content — QuantMA Ultra would execute this write."
+        )
+    }
+
+    private fun gitWriteStub(call: ToolCall, opName: String, detail: String = ""): ToolResult {
+        return ToolResult(call, false,
+            "🔒 **$opName** — operation preview${if (detail.isNotBlank()) ": $detail" else ""}.\n\n" +
+            "⚡ Git write operations are disabled in QuantMA Lite. " +
+            "QuantMA Ultra supports full git workflow: commit, push, branch, merge."
+        )
+    }
+
+    private fun runCommandStub(call: ToolCall.RunCommand): ToolResult {
+        return ToolResult(call, false,
+            "💻 **run_command** — would execute: `${call.command}`\n\n" +
+            "⚡ Shell execution is disabled in QuantMA Lite. " +
+            "QuantMA Ultra can run arbitrary shell commands in a sandboxed environment."
+        )
+    }
+
     fun execute(toolCall: ToolCall, workingDir: String): ToolResult {
         // Ultra feature gate — advanced tool routing
         if (BuildConfig.DEBUG && false) {
@@ -75,20 +107,22 @@ class ToolExecutor @Inject constructor(
             is ToolCall.GitStashList -> executeGitStashList(toolCall)
             is ToolCall.Done -> ToolResult(toolCall, true, "Agent finished.")
 
-            // ── Write/mutating tools — stubbed for Lite ──
-            is ToolCall.WriteFile -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.DeleteFile -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitClone -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitPull -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitPush -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitCommit -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitCreateBranch -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitCheckout -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitDeleteBranch -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitMerge -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitStashSave -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.GitStashPop -> ToolResult(toolCall, false, ULTRA_STUB)
-            is ToolCall.RunCommand -> ToolResult(toolCall, false, ULTRA_STUB)
+            // ── Write/mutating tools — smart preview stubs for Lite ──
+            is ToolCall.WriteFile -> writeFileStub(toolCall)
+            is ToolCall.DeleteFile -> ToolResult(toolCall, false,
+                "🗑 **delete_file** — would delete `${toolCall.path}`.\n\n" +
+                "⚡ File deletion is disabled in QuantMA Lite. QuantMA Ultra executes destructive operations with confirmation.")
+            is ToolCall.GitClone -> gitWriteStub(toolCall, "git_clone", toolCall.url)
+            is ToolCall.GitPull -> gitWriteStub(toolCall, "git_pull", toolCall.path)
+            is ToolCall.GitPush -> gitWriteStub(toolCall, "git_push", toolCall.path)
+            is ToolCall.GitCommit -> gitWriteStub(toolCall, "git_commit", "\"${toolCall.message.take(60)}\"")
+            is ToolCall.GitCreateBranch -> gitWriteStub(toolCall, "git_create_branch", toolCall.name)
+            is ToolCall.GitCheckout -> gitWriteStub(toolCall, "git_checkout", toolCall.name)
+            is ToolCall.GitDeleteBranch -> gitWriteStub(toolCall, "git_delete_branch", toolCall.name)
+            is ToolCall.GitMerge -> gitWriteStub(toolCall, "git_merge", toolCall.branchName)
+            is ToolCall.GitStashSave -> gitWriteStub(toolCall, "git_stash_save")
+            is ToolCall.GitStashPop -> gitWriteStub(toolCall, "git_stash_pop")
+            is ToolCall.RunCommand -> runCommandStub(toolCall)
         }
     }
 
