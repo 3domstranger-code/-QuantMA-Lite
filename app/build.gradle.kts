@@ -225,11 +225,6 @@ dependencies {
     // DataStore
     implementation(libs.datastore.preferences)
 
-    // Sora Editor
-    implementation(platform(libs.sora.editor.bom))
-    implementation(libs.sora.editor)
-    implementation(libs.sora.editor.textmate)
-
     // JGit
     implementation(libs.jgit)
 
@@ -245,7 +240,7 @@ dependencies {
     // Logging (v2.8.0)
     implementation(libs.timber)
 
-    // Desugaring (required by sora-editor-textmate for Android < 13)
+    // Desugaring (required by JGit for java.time.Instant on Android < 13)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // Unit tests (pure JVM — no Android runtime needed for data/inference/agent logic)

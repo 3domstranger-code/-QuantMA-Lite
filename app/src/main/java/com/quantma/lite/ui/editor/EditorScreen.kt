@@ -1,49 +1,42 @@
 package com.quantma.lite.ui.editor
 
-import timber.log.Timber
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quantma.lite.R
-import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
-import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
-import io.github.rosemoe.sora.widget.CodeEditor
+
+private val EditorBg        = Color(0xFF1E1F29)
+private val LineNumBg       = Color(0xFF191A24)
+private val LineNumColor    = Color(0xFF6272A4)
+private val CursorColor     = Color(0xFFF8F8F2)
+private val EditorTextColor = Color(0xFFF8F8F2)
+private val StatusBarBg     = Color(0xFF14151F)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,27 +45,49 @@ fun EditorScreen(
     onBack: () -> Unit,
     viewModel: EditorViewModel = hiltViewModel()
 ) {
-    val fileName by viewModel.fileName.collectAsState()
+    val fileName    by viewModel.fileName.collectAsState()
     val fileContent by viewModel.fileContent.collectAsState()
-    val isModified by viewModel.isModified.collectAsState()
-    val isSaving by viewModel.isSaving.collectAsState()
+    val isModified  by viewModel.isModified.collectAsState()
+    val isSaving    by viewModel.isSaving.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    val canUndo     by viewModel.canUndo.collectAsState()
+    val canRedo     by viewModel.canRedo.collectAsState()
+    val language    by viewModel.language.collectAsState()
 
-    var editorRef by remember { mutableStateOf<CodeEditor?>(null) }
-    var loadedFilePath by remember { mutableStateOf("") }
+    // Local TextFieldValue tracks cursor; content sync comes from ViewModel
+    var textValue by remember { mutableStateOf(TextFieldValue("")) }
+    var initialised by remember { mutableStateOf(false) }
 
-    // Load file when screen opens
+    // Sync when ViewModel content changes (load, undo, redo)
+    LaunchedEffect(fileContent) {
+        if (!initialised || textValue.text != fileContent) {
+            textValue = TextFieldValue(fileContent)
+            initialised = true
+        }
+    }
+
     LaunchedEffect(filePath) {
         viewModel.openFile(filePath)
     }
 
+    // Highlighted text (recomputed on each keystroke — fast for files <200 KB)
+    val highlighted: AnnotatedString = remember(textValue.text, language) {
+        SyntaxHighlighter.highlight(language, textValue.text)
+    }
+
+    val vertScroll  = rememberScrollState()
+    val horizScroll = rememberScrollState()
+
     Column(modifier = Modifier.fillMaxSize()) {
+
+        // ── Top App Bar ────────────────────────────────────────────────────────
         TopAppBar(
             title = {
                 Text(
-                    text = if (isModified) "$fileName *" else fileName,
+                    text = if (isModified) "● $fileName" else fileName,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleSmall.copy(fontFamily = FontFamily.Monospace)
                 )
             },
             navigationIcon = {
@@ -81,99 +96,102 @@ fun EditorScreen(
                 }
             },
             actions = {
-                // Undo
-                IconButton(
-                    onClick = { editorRef?.undo() },
-                    enabled = editorRef?.canUndo() == true
-                ) {
+                IconButton(onClick = {
+                    val restored = viewModel.undo()
+                    if (restored != null) textValue = TextFieldValue(restored)
+                }, enabled = canUndo) {
                     Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = stringResource(R.string.undo))
                 }
-                // Redo
-                IconButton(
-                    onClick = { editorRef?.redo() },
-                    enabled = editorRef?.canRedo() == true
-                ) {
+                IconButton(onClick = {
+                    val restored = viewModel.redo()
+                    if (restored != null) textValue = TextFieldValue(restored)
+                }, enabled = canRedo) {
                     Icon(Icons.AutoMirrored.Filled.Redo, contentDescription = stringResource(R.string.redo))
                 }
-                // Save
                 IconButton(
-                    onClick = {
-                        editorRef?.let { editor ->
-                            viewModel.saveFile(editor.text.toString())
-                        }
-                    },
+                    onClick = { viewModel.saveFile(textValue.text) },
                     enabled = isModified && !isSaving
                 ) {
                     if (isSaving) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.padding(8.dp),
-                            strokeWidth = 2.dp
-                        )
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                     } else {
                         Icon(Icons.Default.Save, contentDescription = stringResource(R.string.save))
                     }
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = LineNumBg)
         )
 
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            // Sora Editor via AndroidView
-            AndroidView(
-                factory = { context ->
-                    CodeEditor(context).apply {
-                        // Basic settings
-                        setTextSize(14f)
-                        isLineNumberEnabled = true
-                        isWordwrap = false
-                        tabWidth = 4
+        // ── Editor body ────────────────────────────────────────────────────────
+        Box(modifier = Modifier.weight(1f).fillMaxWidth().background(EditorBg)) {
 
-                        // Apply TextMate theme if available
-                        try {
-                            val themeRegistry = ThemeRegistry.getInstance()
-                            val colorScheme = TextMateColorScheme.create(themeRegistry)
-                            this.colorScheme = colorScheme
-                        } catch (e: Exception) {
-                            Timber.w(e, "TextMate theme not available, using defaults")
-                        }
-
-                        // Listen for text changes
-                        subscribeAlways(
-                            io.github.rosemoe.sora.event.ContentChangeEvent::class.java
-                        ) {
-                            viewModel.onContentChanged(text.toString())
-                        }
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(vertScroll)
+            ) {
+                // Line numbers
+                val lineCount = maxOf(1, textValue.text.count { it == '\n' } + 1)
+                Column(
+                    modifier = Modifier
+                        .background(LineNumBg)
+                        .padding(start = 8.dp, end = 6.dp, top = 8.dp, bottom = 8.dp)
+                        .width(IntrinsicSize.Max)
+                        .widthIn(min = 32.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    repeat(lineCount) { i ->
+                        Text(
+                            text = "${i + 1}",
+                            style = TextStyle(
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 13.sp,
+                                color = LineNumColor,
+                                lineHeight = 20.sp
+                            )
+                        )
                     }
-                },
-                update = { editor ->
-                    editorRef = editor
+                }
 
-                    // Set content only once when file is first loaded (or when a different file is opened)
-                    if (fileContent.isNotEmpty() && loadedFilePath != filePath) {
-                        loadedFilePath = filePath
-                        editor.setText(fileContent)
+                // Vertical divider
+                Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(LineNumBg))
 
-                        // Apply TextMate language
-                        val scopeName = viewModel.getScopeNameForFile()
-                        try {
-                            val language = TextMateLanguage.create(scopeName, true)
-                            editor.setEditorLanguage(language)
-                        } catch (e: Exception) {
-                            Timber.w(e, "TextMate language not found for $scopeName")
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
+                // Code area — horizontal scroll wrapping BasicTextField
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .horizontalScroll(horizScroll)
+                        .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                ) {
+                    BasicTextField(
+                        value = textValue,
+                        onValueChange = { newValue ->
+                            if (newValue.text != textValue.text) {
+                                viewModel.onContentChanged(newValue.text)
+                            }
+                            textValue = newValue
+                        },
+                        textStyle = TextStyle(
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 13.sp,
+                            color = EditorTextColor,
+                            lineHeight = 20.sp
+                        ),
+                        cursorBrush = SolidColor(CursorColor),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+                        // Apply syntax highlighting as visual transformation
+                        visualTransformation = remember(highlighted) {
+                            HighlightTransformation(highlighted)
+                        },
+                        modifier = Modifier.fillMaxWidth().widthIn(min = 600.dp)
+                    )
+                }
+            }
 
             // Error snackbar
             errorMessage?.let { error ->
                 Snackbar(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
                     action = {
                         TextButton(onClick = { viewModel.clearError() }) {
                             Text(stringResource(R.string.dismiss))
@@ -181,48 +199,60 @@ fun EditorScreen(
                     },
                     containerColor = MaterialTheme.colorScheme.errorContainer,
                     contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ) {
-                    Text(error)
-                }
+                ) { Text(error) }
             }
         }
 
-        // Bottom status bar
+        // ── Status bar ─────────────────────────────────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+                .background(StatusBarBg)
+                .padding(horizontal = 12.dp, vertical = 3.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val ext = fileName.substringAfterLast('.', "").uppercase()
             Text(
-                text = ext.ifEmpty { "TXT" },
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = language.name,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontFamily = FontFamily.Monospace,
+                    color = LineNumColor
+                )
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "UTF-8",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelSmall.copy(color = LineNumColor)
             )
             Spacer(modifier = Modifier.weight(1f))
-            editorRef?.let { editor ->
-                val cursor = editor.cursor
-                Text(
-                    text = stringResource(R.string.editor_position, cursor.leftLine + 1, cursor.leftColumn + 1),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            // Cursor position
+            val cursorOffset = textValue.selection.start
+            val textBefore = textValue.text.take(cursorOffset)
+            val line = textBefore.count { it == '\n' } + 1
+            val col  = cursorOffset - (textBefore.lastIndexOf('\n') + 1) + 1
+            Text(
+                text = stringResource(R.string.editor_position, line, col),
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontFamily = FontFamily.Monospace,
+                    color = LineNumColor
                 )
-            }
+            )
         }
     }
+}
 
-    // Cleanup
-    DisposableEffect(Unit) {
-        onDispose {
-            editorRef?.release()
-            editorRef = null
-        }
+/**
+ * Applies pre-computed [AnnotatedString] to BasicTextField as visual transformation.
+ * The annotated string must have the same character count as the raw text.
+ */
+private class HighlightTransformation(
+    private val highlighted: AnnotatedString
+) : VisualTransformation {
+    override fun filter(text: AnnotatedString): androidx.compose.ui.text.input.TransformedText {
+        // Ensure length match (safety guard)
+        val out = if (highlighted.length == text.length) highlighted else text
+        return androidx.compose.ui.text.input.TransformedText(
+            out,
+            androidx.compose.ui.text.input.OffsetMapping.Identity
+        )
     }
 }

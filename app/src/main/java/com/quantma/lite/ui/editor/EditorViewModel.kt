@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val MAX_UNDO = 100
+
 @HiltViewModel
 class EditorViewModel @Inject constructor(
     private val fileRepository: FileRepository
@@ -36,7 +38,20 @@ class EditorViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    private val _canUndo = MutableStateFlow(false)
+    val canUndo: StateFlow<Boolean> = _canUndo.asStateFlow()
+
+    private val _canRedo = MutableStateFlow(false)
+    val canRedo: StateFlow<Boolean> = _canRedo.asStateFlow()
+
+    private val _language = MutableStateFlow(CodeLanguage.PLAIN)
+    val language: StateFlow<CodeLanguage> = _language.asStateFlow()
+
     private var originalContent = ""
+
+    // Undo/redo stacks hold snapshots of text content
+    private val undoStack = ArrayDeque<String>()
+    private val redoStack = ArrayDeque<String>()
 
     fun openFile(path: String) {
         viewModelScope.launch {
@@ -50,7 +65,11 @@ class EditorViewModel @Inject constructor(
                 originalContent = content
                 _isModified.value = false
                 _errorMessage.value = null
-                Timber.i("Opened: ${_fileName.value} (${content.length} chars)")
+                _language.value = SyntaxHighlighter.getLanguage(_fileName.value)
+                undoStack.clear()
+                redoStack.clear()
+                updateUndoRedoState()
+                Timber.i("Opened: ${_fileName.value} (${content.length} chars, lang=${_language.value})")
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to open file: ${e.message}"
                 Timber.e(e, "Failed to open $path")
@@ -58,8 +77,41 @@ class EditorViewModel @Inject constructor(
         }
     }
 
+    /** Called whenever the editor text changes. Pushes snapshot for undo. */
     fun onContentChanged(newContent: String) {
+        val previous = _fileContent.value
+        if (newContent == previous) return
+
+        // Push previous state to undo stack
+        undoStack.addLast(previous)
+        if (undoStack.size > MAX_UNDO) undoStack.removeFirst()
+        redoStack.clear()
+
+        _fileContent.value = newContent
         _isModified.value = newContent != originalContent
+        updateUndoRedoState()
+    }
+
+    fun undo(): String? {
+        if (undoStack.isEmpty()) return null
+        val current = _fileContent.value
+        redoStack.addLast(current)
+        val prev = undoStack.removeLast()
+        _fileContent.value = prev
+        _isModified.value = prev != originalContent
+        updateUndoRedoState()
+        return prev
+    }
+
+    fun redo(): String? {
+        if (redoStack.isEmpty()) return null
+        val current = _fileContent.value
+        undoStack.addLast(current)
+        val next = redoStack.removeLast()
+        _fileContent.value = next
+        _isModified.value = next != originalContent
+        updateUndoRedoState()
+        return next
     }
 
     fun saveFile(currentContent: String) {
@@ -90,36 +142,8 @@ class EditorViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    fun getScopeNameForFile(): String {
-        val ext = _fileName.value.substringAfterLast('.', "").lowercase()
-        return when (ext) {
-            "kt", "kts" -> "source.kotlin"
-            "java" -> "source.java"
-            "py" -> "source.python"
-            "js", "mjs" -> "source.js"
-            "ts" -> "source.ts"
-            "jsx" -> "source.js.jsx"
-            "tsx" -> "source.tsx"
-            "c", "h" -> "source.c"
-            "cpp", "hpp", "cc", "cxx" -> "source.cpp"
-            "rs" -> "source.rust"
-            "go" -> "source.go"
-            "rb" -> "source.ruby"
-            "swift" -> "source.swift"
-            "html", "htm" -> "text.html.basic"
-            "css" -> "source.css"
-            "json" -> "source.json"
-            "xml" -> "text.xml"
-            "yaml", "yml" -> "source.yaml"
-            "md", "markdown" -> "text.html.markdown"
-            "sh", "bash", "zsh" -> "source.shell"
-            "sql" -> "source.sql"
-            "toml" -> "source.toml"
-            "lua" -> "source.lua"
-            "dart" -> "source.dart"
-            "gradle" -> "source.groovy"
-            "php" -> "source.php"
-            else -> "source.${ext.ifEmpty { "txt" }}"
-        }
+    private fun updateUndoRedoState() {
+        _canUndo.value = undoStack.isNotEmpty()
+        _canRedo.value = redoStack.isNotEmpty()
     }
 }
