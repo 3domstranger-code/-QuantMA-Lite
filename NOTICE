@@ -1,0 +1,81 @@
+QuantMA Lite
+Copyright 2025-2026 REgamer (3domstranger@gmail.com)
+
+This product is licensed under the Apache License, Version 2.0.
+See LICENSE for the full license text.
+
+================================================================================
+THIRD-PARTY SOFTWARE NOTICES
+================================================================================
+
+This product includes the following third-party components:
+
+--------------------------------------------------------------------------------
+llama.cpp
+Copyright (c) 2023-2024 The ggml authors
+License: MIT
+https://github.com/ggerganov/llama.cpp
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Android Jetpack (Compose, Room, Hilt, Navigation, DataStore, etc.)
+Copyright (c) The Android Open Source Project
+License: Apache 2.0
+https://developer.android.com/jetpack
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Kotlin Standard Library and Coroutines
+Copyright (c) JetBrains s.r.o. and Kotlin Programming Language contributors
+License: Apache 2.0
+https://kotlinlang.org
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Dagger / Hilt
+Copyright (c) The Dagger Authors
+License: Apache 2.0
+https://dagger.dev/hilt
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Room Persistence Library
+Copyright (c) The Android Open Source Project
+License: Apache 2.0
+https://developer.android.com/training/data-storage/room
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+JGit
+Copyright (c) 2005, 2024 Eclipse Foundation and others
+License: Eclipse Distribution License 1.0 (BSD-3-Clause)
+https://www.eclipse.org/jgit/
+Source available at: https://git.eclipse.org/r/jgit/jgit
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sora Editor
+Copyright (c) 2020-2024 Rosemoe and contributors
+License: GNU Lesser General Public License v2.1 (LGPL-2.1)
+https://github.com/Rosemoe/sora-editor
+
+This application uses Sora Editor as a dynamically linked library.
+The full LGPL-2.1 license text is available at:
+https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+Source code of Sora Editor is available at:
+https://github.com/Rosemoe/sora-editor
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Timber
+Copyright (c) 2013 Jake Wharton
+License: Apache 2.0
+https://github.com/JakeWharton/timber
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Material Design Icons
+Copyright (c) Google LLC
+License: Apache 2.0
+https://fonts.google.com/icons
+--------------------------------------------------------------------------------
