@@ -450,4 +450,9 @@
     <string name="tap_to_edit">Нажмите для редактирования</string>
     <string name="view_details">Подробнее</string>
     <string name="read_only_built_in">Встроенные элементы доступны только для чтения</string>
+
+    <!-- CLI Terminal -->
+    <string name="cli_title">Терминал CLI</string>
+    <string name="cli_hint">Введите команду… (/ help для справки)</string>
+    <string name="cli_clear">Очистить терминал</string>
 </resources>
