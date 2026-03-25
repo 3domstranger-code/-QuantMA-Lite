@@ -4,23 +4,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quantma.lite.data.download.DownloadState
 import com.quantma.lite.data.download.ModelDownloader
+import com.quantma.lite.data.local.preferences.SettingsDataStore
 import com.quantma.lite.data.model.RecommendedModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 /**
  * ViewModel for ModelCatalogScreen.
  * Manages download state per model (keyed by filename) with cancel support.
  * Phase 9 (v1.9.1) → v2.0: cancel downloads, track download IDs.
+ * Block 2: model deletion support.
  */
 @HiltViewModel
 class ModelCatalogViewModel @Inject constructor(
-    private val modelDownloader: ModelDownloader
+    private val modelDownloader: ModelDownloader,
+    private val settingsDataStore: SettingsDataStore
 ) : ViewModel() {
 
     private val _downloadStates = MutableStateFlow<Map<String, DownloadState>>(emptyMap())
@@ -66,5 +71,14 @@ class ModelCatalogViewModel @Inject constructor(
         activeDownloads.remove(model.filename)
         observeJobs.remove(model.filename)
         _downloadStates.value = _downloadStates.value + (model.filename to DownloadState.Idle)
+    }
+
+    fun deleteInstalledModel(filename: String, modelDir: String) {
+        viewModelScope.launch {
+            val file = File(modelDir, filename)
+            if (file.exists()) file.delete()
+            val currentPath = settingsDataStore.modelPath.first()
+            if (currentPath.endsWith(filename)) settingsDataStore.setModelPath("")
+        }
     }
 }

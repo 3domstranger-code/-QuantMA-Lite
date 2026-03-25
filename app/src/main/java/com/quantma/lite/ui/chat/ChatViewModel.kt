@@ -195,6 +195,12 @@ class ChatViewModel @Inject constructor(
     private val _detectedQuestions = MutableStateFlow<List<String>>(emptyList())
     val detectedQuestions: StateFlow<List<String>> = _detectedQuestions.asStateFlow()
 
+    // ---- File attachment (Block 3) ----
+    private val _attachedFilePath = MutableStateFlow<String?>(null)
+    val attachedFilePath: StateFlow<String?> = _attachedFilePath.asStateFlow()
+    fun attachFileToChat(path: String) { _attachedFilePath.value = path }
+    fun clearAttachedFile() { _attachedFilePath.value = null }
+
     fun dismissDetectedQuestions() { _detectedQuestions.value = emptyList() }
 
     fun submitDetectedQuestion(question: String) {
@@ -592,17 +598,28 @@ class ChatViewModel @Inject constructor(
         if (sessionId == 0L) return
 
         viewModelScope.launch {
+            val filePath = _attachedFilePath.value
+            val finalContent = if (filePath != null) {
+                val file = java.io.File(filePath)
+                val ext = file.extension.ifEmpty { "txt" }
+                val fileContent = try { file.readText().take(8000) } catch (e: Exception) { "" }
+                clearAttachedFile()
+                if (fileContent.isNotEmpty())
+                    "```$ext\n// File: ${file.name}\n$fileContent\n```\n\n${content.trim()}"
+                else content.trim()
+            } else content.trim()
+
             val userMessage = ChatMessage(
                 sessionId = sessionId,
                 role = Role.USER,
-                content = content.trim()
+                content = finalContent
             )
             chatRepository.insertMessage(userMessage)
 
             // Auto-title on first user message
             val session = chatRepository.getSession(sessionId)
             if (session != null && session.title == "New Chat" && session.messageCount <= 1) {
-                val title = content.trim().take(40)
+                val title = finalContent.take(40)
                 chatRepository.updateSessionTitle(sessionId, title)
             }
 
@@ -622,16 +639,16 @@ class ChatViewModel @Inject constructor(
                 // Try direct file op shortcut first — CodeLlama 7B doesn't reliably
                 // generate ACTION: format, so we parse the request and execute directly
                 val workingDir = settingsDataStore.agentWorkingDir.first()
-                val directOp = tryDirectFileOp(content.trim(), workingDir)
+                val directOp = tryDirectFileOp(finalContent, workingDir)
                 if (directOp != null) {
                     Timber.i("Direct file op shortcut: $directOp")
                     executeDirectFileOp(directOp, sessionId)
                 } else {
-                    runAgentLoop(content.trim())
+                    runAgentLoop(finalContent)
                 }
             } else {
                 // Intercept file/git requests in Chat mode — LLM ignores system prompt for these
-                if (isFileOrGitRequest(content)) {
+                if (isFileOrGitRequest(finalContent)) {
                     Timber.i("File/git request intercepted in Chat mode: ${content.take(60)}")
                     chatRepository.insertMessage(
                         ChatMessage(

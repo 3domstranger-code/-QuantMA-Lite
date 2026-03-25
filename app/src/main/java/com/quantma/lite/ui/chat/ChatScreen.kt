@@ -40,8 +40,10 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.SmartToy
+import androidx.navigation.NavBackStackEntry
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
@@ -108,7 +110,9 @@ import timber.log.Timber
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(),
-    onNavigateToCli: (() -> Unit)? = null
+    onNavigateToCli: (() -> Unit)? = null,
+    onNavigateToFileBrowser: (() -> Unit)? = null,
+    navBackStackEntry: NavBackStackEntry? = null
 ) {
     val messages by viewModel.messages.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -136,6 +140,20 @@ fun ChatScreen(
     val cpuLoad by viewModel.cpuLoad.collectAsState()
     val gpuLoad by viewModel.gpuLoad.collectAsState()
     val detectedQuestions by viewModel.detectedQuestions.collectAsState()
+
+    val attachedFilePath by viewModel.attachedFilePath.collectAsState()
+
+    // Receive file path from FileBrowserScreen via savedStateHandle
+    LaunchedEffect(navBackStackEntry) {
+        navBackStackEntry?.savedStateHandle
+            ?.getStateFlow<String?>("selected_file", null)
+            ?.collect { path ->
+                if (path != null) {
+                    viewModel.attachFileToChat(path)
+                    navBackStackEntry.savedStateHandle["selected_file"] = null
+                }
+            }
+    }
 
     val listState = rememberLazyListState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -290,6 +308,12 @@ fun ChatScreen(
                             )
                         ) {
                             Icon(Icons.Default.SmartToy, contentDescription = stringResource(R.string.agent_mode))
+                        }
+                        // File attach
+                        if (onNavigateToFileBrowser != null) {
+                            IconButton(onClick = onNavigateToFileBrowser) {
+                                Icon(Icons.Default.AttachFile, contentDescription = "Attach file")
+                            }
                         }
                         // CLI Terminal
                         if (onNavigateToCli != null) {
@@ -762,6 +786,35 @@ fun ChatScreen(
                     onQuestionSelected = { viewModel.submitDetectedQuestion(it) },
                     onDismiss = { viewModel.dismissDetectedQuestions() }
                 )
+            }
+
+            // Attached file chip
+            attachedFilePath?.let { path ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.AttachFile,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = java.io.File(path).name,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    )
+                    IconButton(onClick = { viewModel.clearAttachedFile() }, modifier = Modifier.size(24.dp)) {
+                        Icon(Icons.Default.Close, contentDescription = "Remove", modifier = Modifier.size(16.dp))
+                    }
+                }
             }
 
             InputBar(

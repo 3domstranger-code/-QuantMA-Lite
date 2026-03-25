@@ -52,7 +52,8 @@ fun NavGraph(startDestination: String = Screen.Chat.route) {
                 currentRoute != "onboarding" &&
                 currentRoute != "model_catalog" &&
                 currentRoute != "licenses" &&
-                currentRoute != "cli") {
+                currentRoute != "cli" &&
+                currentRoute != "filebrowser_chat") {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 0.dp
@@ -97,9 +98,22 @@ fun NavGraph(startDestination: String = Screen.Chat.route) {
             startDestination = startDestination,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Chat.route) {
+            composable(Screen.Chat.route) { backStackEntry ->
                 ChatScreen(
-                    onNavigateToCli = { navController.navigate("cli") }
+                    onNavigateToCli = { navController.navigate("cli") },
+                    onNavigateToFileBrowser = { navController.navigate("filebrowser_chat") },
+                    navBackStackEntry = backStackEntry
+                )
+            }
+            composable("filebrowser_chat") {
+                FileBrowserScreen(
+                    onFileSelected = { path ->
+                        navController.previousBackStackEntry?.savedStateHandle?.set("selected_file", path)
+                        navController.popBackStack()
+                    },
+                    onOpenGit = { repoPath ->
+                        navController.navigate("git/${Uri.encode(repoPath)}")
+                    }
                 )
             }
             composable(Screen.Files.route) {

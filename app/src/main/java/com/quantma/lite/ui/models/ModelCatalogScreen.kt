@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -68,6 +70,8 @@ fun ModelCatalogScreen(
     val downloadStates by viewModel.downloadStates.collectAsState()
     var selectedFilter by remember { mutableStateOf<ModelCategory?>(null) }
     var modelToConfirm by remember { mutableStateOf<RecommendedModel?>(null) }
+    val context = LocalContext.current
+    val modelDir = context.getExternalFilesDir(null)?.absolutePath ?: ""
 
     val filteredModels = if (selectedFilter != null) {
         RecommendedModels.list.filter { it.category == selectedFilter }
@@ -134,7 +138,8 @@ fun ModelCatalogScreen(
                         model = model,
                         state = downloadStates[model.filename],
                         onDownloadClick = { modelToConfirm = model },
-                        onCancelClick = { viewModel.cancelDownload(model) }
+                        onCancelClick = { viewModel.cancelDownload(model) },
+                        onDeleteClick = { viewModel.deleteInstalledModel(model.filename, modelDir) }
                     )
                 }
             }
@@ -175,8 +180,26 @@ private fun ModelCard(
     model: RecommendedModel,
     state: DownloadState?,
     onDownloadClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete model?") },
+            text = { Text("${model.name} will be removed from device.") },
+            confirmButton = {
+                TextButton(onClick = { onDeleteClick(); showDeleteDialog = false }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -204,11 +227,20 @@ private fun ModelCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 when (state) {
                     is DownloadState.Done -> {
-                        Text(
-                            text = stringResource(R.string.catalog_done),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.catalog_done),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            IconButton(onClick = { showDeleteDialog = true }) {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = "Delete model",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
                     }
                     is DownloadState.Downloading -> {
                         OutlinedButton(onClick = onCancelClick) {
