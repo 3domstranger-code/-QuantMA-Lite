@@ -17,11 +17,12 @@
 -keep class org.eclipse.jgit.** { *; }
 -dontwarn org.eclipse.jgit.**
 
-# Sora Editor + TextMate
--keep class io.github.rosemoe.sora.** { *; }
--keep class org.eclipse.tm4e.** { *; }
--keep class org.joni.** { *; }
--dontwarn io.github.rosemoe.sora.**
+# Compile-time annotation libraries (not present at runtime)
+-dontwarn com.google.errorprone.annotations.CanIgnoreReturnValue
+-dontwarn com.google.errorprone.annotations.CheckReturnValue
+-dontwarn com.google.errorprone.annotations.Immutable
+-dontwarn com.google.errorprone.annotations.RestrictedApi
+-dontwarn org.slf4j.impl.StaticLoggerBinder
 
 # Compose
 -dontwarn androidx.compose.**
