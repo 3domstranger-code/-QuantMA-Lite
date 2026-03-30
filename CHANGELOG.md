@@ -9,6 +9,32 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [1.4.0-lite] - 2026-03-23
+
+### Added
+- Model deletion — delete installed models from the catalog UI (frees storage)
+- File-to-chat attachment — attach files via file browser, content injected into prompt context
+
+### Fixed
+- R8 dontwarn rules for errorprone annotations and slf4j (release build)
+
+---
+
+## [1.3.0-lite] - 2026-03-23
+
+### Changed
+- Replaced Sora Editor (LGPL-2.1) with custom pure-Compose syntax highlighter — zero LGPL dependencies
+
+---
+
+## [1.2.0-lite] - 2026-03-23
+
+### Added
+- CLI terminal screen — interactive shell interface within the app
+- Apache 2.0 NOTICE file — third-party attribution
+
+---
+
 ## [1.1.0-lite] - 2026-03-23
 
 ### Added
